@@ -9,17 +9,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary: #6B5CE7;
-      --primary-light: #9C8FFF;
-      --accent: #FF6B9D;
-      --accent2: #FFB347;
-      --green: #4ECDC4;
-      --dark: #0f0e17;
-      --dark2: #1a1830;
-      --card: rgba(255,255,255,0.06);
-      --card-border: rgba(255,255,255,0.12);
-      --text: #f0eeff;
-      --text-muted: rgba(240,238,255,0.6);
+      --primary: #1E88C8;        /* 청의 호수 코발트 블루 */
+      --primary-light: #7EC8E3;  /* 연한 아오이이케 */
+      --accent: #A57FCA;         /* 후라노 라벤더 */
+      --accent2: #E8A325;        /* 삿포로 맥주 앰버 */
+      --green: #2ECC8A;          /* 홋카이도 초원 */
+      --dark: #081525;           /* 홋카이도 밤하늘 네이비 */
+      --dark2: #0D2040;
+      --card: rgba(30,136,200,0.06);
+      --card-border: rgba(126,200,227,0.18);
+      --text: #EEF8FF;
+      --text-muted: rgba(180,220,240,0.65);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -35,9 +35,9 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 999;
       padding: 16px 32px;
       display: flex; align-items: center; justify-content: space-between;
-      background: rgba(15,14,23,0.8);
+      background: rgba(8,21,37,0.85);
       backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--card-border);
+      border-bottom: 1px solid rgba(126,200,227,0.2);
     }
     .nav-logo { font-size: 1.1rem; font-weight: 700; color: var(--primary-light); }
     .nav-links { display: flex; gap: 24px; list-style: none; }
@@ -64,7 +64,12 @@
     #hero::after {
       content: '';
       position: absolute; inset: 0;
-      background: linear-gradient(to bottom, rgba(15,14,23,0.3) 0%, rgba(15,14,23,0.1) 40%, rgba(15,14,23,0.7) 80%, var(--dark) 100%);
+      background: linear-gradient(to bottom,
+        rgba(8,21,37,0.25) 0%,
+        rgba(8,21,37,0.05) 35%,
+        rgba(8,21,37,0.55) 75%,
+        rgba(8,21,37,1) 100%
+      );
     }
     .hero-content {
       position: relative; z-index: 2;
@@ -72,7 +77,7 @@
     }
     .hero-badge {
       display: inline-block;
-      background: rgba(107,92,231,0.3);
+      background: rgba(30,136,200,0.2);
       border: 1px solid var(--primary-light);
       color: var(--primary-light);
       font-size: 0.78rem; font-weight: 600; letter-spacing: 2px;
@@ -86,13 +91,15 @@
       font-weight: 700; line-height: 1.15;
       margin-bottom: 16px;
       animation: fadeUp 0.8s 0.15s ease both;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 60px rgba(0,0,0,0.7), 2px 2px 4px rgba(0,0,0,0.8);
     }
-    .hero-title span { color: var(--primary-light); font-style: italic; }
+    .hero-title span { color: var(--primary-light); font-style: italic; text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 40px rgba(107,92,231,0.5); }
     .hero-sub {
       font-size: clamp(1rem, 2.5vw, 1.3rem);
-      color: rgba(255,255,255,0.85); font-weight: 300;
+      color: rgba(255,255,255,0.95); font-weight: 400;
       margin-bottom: 36px;
       animation: fadeUp 0.8s 0.3s ease both;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.8);
     }
     .hero-tags {
       display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
@@ -163,11 +170,11 @@
     .hotel-card:hover { transform: translateY(-4px); }
     .hotel-card.recommended {
       border-color: var(--primary);
-      box-shadow: 0 0 40px rgba(107,92,231,0.25);
+      box-shadow: 0 0 40px rgba(30,136,200,0.25);
     }
     .hotel-badge-rec {
       position: absolute; top: 16px; right: 16px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
       color: white; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px;
       padding: 4px 12px; border-radius: 100px;
     }
@@ -185,7 +192,7 @@
     .pro-item::before { content: '✓'; color: var(--green); flex-shrink: 0; font-weight: 700; }
     .con-item::before { content: '✗'; color: #ff6b6b; flex-shrink: 0; font-weight: 700; }
     .hotel-rec-box {
-      background: linear-gradient(135deg, rgba(107,92,231,0.15), rgba(255,107,157,0.1));
+      background: linear-gradient(135deg, rgba(30,136,200,0.12), rgba(165,127,202,0.1));
       border: 1px solid var(--primary);
       border-radius: 16px; padding: 24px;
     }
@@ -194,8 +201,8 @@
 
     /* ── TRANSPORT CARD ── */
     .transport-section {
-      background: linear-gradient(135deg, rgba(78,205,196,0.08), rgba(107,92,231,0.08));
-      border: 1px solid var(--card-border); border-radius: 24px;
+      background: linear-gradient(135deg, rgba(30,136,200,0.12), rgba(46,204,138,0.08));
+      border: 1px solid var(--primary); border-radius: 24px;
       padding: 36px; margin-bottom: 48px;
     }
     .transport-title {
@@ -211,9 +218,9 @@
       font-size: 0.85rem; font-weight: 700;
     }
     .step-num.airport { background: linear-gradient(135deg, #FFB347, #FF6B9D); color: white; }
-    .step-num.subway { background: linear-gradient(135deg, #4ECDC4, #6B5CE7); color: white; }
-    .step-num.bus { background: linear-gradient(135deg, #6B5CE7, #9C8FFF); color: white; }
-    .step-num.tip { background: linear-gradient(135deg, #FFB347, #FFD700); color: #333; }
+    .step-num.subway { background: linear-gradient(135deg, #7EC8E3, #1E88C8); color: white; }
+    .step-num.bus { background: linear-gradient(135deg, #A57FCA, #7EC8E3); color: white; }
+    .step-num.tip { background: linear-gradient(135deg, #1E88C8, #E8A325); color: white; }
     .step-content { flex: 1; }
     .step-content strong { display: block; font-size: 0.95rem; margin-bottom: 4px; }
     .step-content p { color: var(--text-muted); font-size: 0.83rem; line-height: 1.6; }
@@ -226,11 +233,11 @@
 
     /* ── KITACA CARD ── */
     .kitaca-box {
-      background: linear-gradient(135deg, rgba(78,205,196,0.15), rgba(107,92,231,0.1));
+      background: linear-gradient(135deg, rgba(30,136,200,0.15), rgba(46,204,138,0.1));
       border: 1px solid var(--green); border-radius: 16px;
       padding: 24px; margin-top: 24px;
     }
-    .kitaca-box h4 { color: var(--green); margin-bottom: 10px; font-size: 1rem; }
+    .kitaca-box h4 { color: var(--primary-light); margin-bottom: 10px; font-size: 1rem; }
     .kitaca-box ul { list-style: none; color: var(--text-muted); font-size: 0.84rem; line-height: 1.8; }
     .kitaca-box ul li::before { content: '→ '; color: var(--green); }
 
@@ -245,7 +252,7 @@
       transition: all 0.3s;
     }
     .day-tab.active, .day-tab:hover {
-      background: linear-gradient(135deg, var(--primary), var(--accent));
+      background: linear-gradient(to bottom, var(--primary), var(--accent));
       border-color: transparent; color: white;
     }
     .day-panel { display: none; }
@@ -267,14 +274,14 @@
     .timeline::before {
       content: ''; position: absolute; left: 16px; top: 0; bottom: 0;
       width: 2px;
-      background: linear-gradient(to bottom, var(--primary), var(--accent), var(--green));
+      background: linear-gradient(to bottom, var(--primary), #A57FCA, var(--green));
     }
     .tl-item { position: relative; margin-bottom: 32px; }
     .tl-dot {
       position: absolute; left: -40px; top: 4px;
       width: 14px; height: 14px; border-radius: 50%;
       background: var(--primary); border: 2px solid var(--dark);
-      box-shadow: 0 0 0 4px rgba(107,92,231,0.3);
+      box-shadow: 0 0 0 4px rgba(30,136,200,0.3);
     }
     .tl-time {
       font-size: 0.75rem; color: var(--primary-light); font-weight: 700;
@@ -295,20 +302,20 @@
       margin-left: auto; font-size: 0.72rem; padding: 3px 10px;
       border-radius: 100px; font-weight: 600;
     }
-    .badge-food { background: rgba(255,107,157,0.2); color: var(--accent); border: 1px solid var(--accent); }
-    .badge-tour { background: rgba(107,92,231,0.2); color: var(--primary-light); border: 1px solid var(--primary-light); }
-    .badge-move { background: rgba(78,205,196,0.2); color: var(--green); border: 1px solid var(--green); }
-    .badge-shop { background: rgba(255,179,71,0.2); color: var(--accent2); border: 1px solid var(--accent2); }
-    .badge-tip { background: rgba(255,179,71,0.15); color: var(--accent2); border: 1px solid var(--accent2); }
+    .badge-food { background: rgba(165,127,202,0.2); color: var(--accent); border: 1px solid var(--accent); }
+    .badge-tour { background: rgba(30,136,200,0.2); color: var(--primary-light); border: 1px solid var(--primary-light); }
+    .badge-move { background: rgba(46,204,138,0.2); color: var(--green); border: 1px solid var(--green); }
+    .badge-shop { background: rgba(232,163,37,0.2); color: var(--accent2); border: 1px solid var(--accent2); }
+    .badge-tip { background: rgba(232,163,37,0.15); color: var(--accent2); border: 1px solid var(--accent2); }
     .tl-desc { color: var(--text-muted); font-size: 0.84rem; line-height: 1.7; margin-bottom: 10px; }
 
     /* Transport inline */
     .transport-inline {
-      background: rgba(78,205,196,0.06); border: 1px solid rgba(78,205,196,0.3);
+      background: rgba(30,136,200,0.06); border: 1px solid rgba(30,136,200,0.3);
       border-radius: 10px; padding: 12px 14px; margin-top: 10px;
       font-size: 0.8rem; color: var(--text-muted); line-height: 1.7;
     }
-    .transport-inline strong { color: var(--green); }
+    .transport-inline strong { color: var(--primary-light); }
     .transport-inline .t-row { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 4px; }
     .transport-inline .t-row:last-child { margin-bottom: 0; }
 
