@@ -9,17 +9,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary: #1E88C8;        /* 청의 호수 코발트 블루 */
-      --primary-light: #7EC8E3;  /* 연한 아오이이케 */
-      --accent: #A57FCA;         /* 후라노 라벤더 */
-      --accent2: #E8A325;        /* 삿포로 맥주 앰버 */
-      --green: #2ECC8A;          /* 홋카이도 초원 */
-      --dark: #081525;           /* 홋카이도 밤하늘 네이비 */
-      --dark2: #0D2040;
-      --card: rgba(30,136,200,0.06);
-      --card-border: rgba(126,200,227,0.18);
-      --text: #EEF8FF;
-      --text-muted: rgba(180,220,240,0.65);
+      --primary: #FFB7C5;        /* 흩날리는 사쿠라 핑크 */
+      --primary-light: #FFE4E1;  /* 연한 벚꽃 잎 화이트 핑크 */
+      --accent: #FFD700;         /* 영롱한 골드 (스타/추천) */
+      --accent2: #E0B0FF;        /* 모브 퍼플 */
+      --green: #81C784;          /* 부드러운 그린 */
+      --dark: #1F121E;           /* 밤하늘을 수놓은 사쿠라 블랙/다크 플럼 */
+      --dark2: #2B182B;          /* 딥 바이올렛 카드 배경용 */
+      --card: rgba(255,183,197,0.08);
+      --card-border: rgba(255,183,197,0.2);
+      --text: #FCE4EC;           /* 눈부신 사쿠라 화이트 */
+      --text-muted: rgba(255,183,197,0.6);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -35,9 +35,9 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 999;
       padding: 16px 32px;
       display: flex; align-items: center; justify-content: space-between;
-      background: rgba(8,21,37,0.85);
+      background: rgba(31,18,31,0.85);
       backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(126,200,227,0.2);
+      border-bottom: 1px solid rgba(255,183,197,0.2);
     }
     .nav-logo { font-size: 1.1rem; font-weight: 700; color: var(--primary-light); }
     .nav-links { display: flex; gap: 24px; list-style: none; }
@@ -56,7 +56,7 @@
     #hero::before {
       content: '';
       position: absolute; inset: 0;
-      background: url('hokkaido_hero.png') center/cover no-repeat;
+      background: url('sapporo_sakura_hero.png') center/cover no-repeat;
       transform: scale(1.05);
       animation: heroZoom 20s ease-in-out infinite alternate;
     }
@@ -65,10 +65,10 @@
       content: '';
       position: absolute; inset: 0;
       background: linear-gradient(to bottom,
-        rgba(8,21,37,0.25) 0%,
-        rgba(8,21,37,0.05) 35%,
-        rgba(8,21,37,0.55) 75%,
-        rgba(8,21,37,1) 100%
+        rgba(31,18,31,0.25) 0%,
+        rgba(31,18,31,0.05) 35%,
+        rgba(31,18,31,0.55) 75%,
+        rgba(31,18,31,1) 100%
       );
     }
     .hero-content {
@@ -432,7 +432,7 @@
     <div class="overview-card">
       <div class="icon">🏨</div>
       <div class="label">숙소</div>
-      <div class="value">그란벨 호텔 타누키<br><small style="color:var(--text-muted);font-weight:400">3박 / 조식 포함</small></div>
+      <div class="value">삿포로 그랜드 호텔<br><small style="color:var(--text-muted);font-weight:400">3박 / 조식 (지하통로 직결)</small></div>
     </div>
     <div class="overview-card">
       <div class="icon">🚌</div>
@@ -458,11 +458,12 @@
 <section id="hotel">
   <div class="section-label reveal">숙소 비교</div>
   <h2 class="section-title reveal">호텔 선택 가이드</h2>
-  <p class="section-desc reveal">두 호텔을 꼼꼼히 비교하고 30대 커플에게 최적인 숙소를 추천드려요.</p>
+  <p class="section-desc reveal">삿포로 그랜드 호텔로 최종 확정되었으며, 상세 비교 및 장단점 분석 자료입니다.</p>
 
   <div class="hotel-grid reveal">
     <!-- 그랜드 호텔 -->
-    <div class="hotel-card">
+    <div class="hotel-card recommended">
+      <div class="hotel-badge-rec">👑 확정</div>
       <div class="hotel-name">⭐ 삿포로 그랜드 호텔</div>
       <div class="hotel-stars">★★★★</div>
       <div class="hotel-price">749,812원 <small style="font-size:0.85rem;font-weight:400;color:var(--text-muted)">3박</small></div>
@@ -484,8 +485,7 @@
     </div>
 
     <!-- 그란벨 호텔 -->
-    <div class="hotel-card recommended">
-      <div class="hotel-badge-rec">👑 추천</div>
+    <div class="hotel-card">
       <div class="hotel-name">✨ 그란벨 호텔 타누키 삿포로</div>
       <div class="hotel-stars">★★★★</div>
       <div class="hotel-price">612,860원 <small style="font-size:0.85rem;font-weight:400;color:var(--text-muted)">3박</small></div>
@@ -507,12 +507,9 @@
   </div>
 
   <div class="hotel-rec-box reveal">
-    <h3>🎯 최종 추천: 그란벨 호텔 타누키 삿포로</h3>
+    <h3>🎯 최종 확정: 삿포로 그랜드 호텔</h3>
     <p>
-      하루 종일 관광 후 <strong style="color:white">13층 노천탕</strong>에서 함께 피로를 푸는 경험은 커플 여행의 백미입니다.
-      타누키코지 상점가와 스스키노 맛집이 도보 5분 거리에 있어 저녁 동선도 완벽해요.
-      모던하고 감각적인 인테리어는 30대 감성에 딱 맞고, 13만 원의 가격 차이로 다른 곳에 더 투자할 수 있어요.
-      단, 삿포로역까지는 지하철 2정거장 이동이 필요하지만 전혀 불편하지 않은 수준입니다.
+      삿포로역 지하보도(치카호)와 직결되어 날씨에 상관없이 안전하고 편리하게 이동할 수 있습니다. 홋카이도 현지 식재료를 아낌없이 사용하는 전통의 오리지널 조식 뷔페로 하루를 품격 있게 시작하며, 넓고 쾌적한 객실에서 3박 동안 커플만의 편안하고 프라이빗한 시간을 보낼 수 있는 완성도 높은 숙소입니다.
     </p>
   </div>
 </section>
@@ -549,14 +546,14 @@
 
   <!-- 공항 → 시내 -->
   <div class="transport-section reveal">
-    <div class="transport-title">🛬 도착 첫날: 신치토세 공항 → 그란벨 호텔</div>
+    <div class="transport-title">🛬 도착 첫날: 신치토세 공항 → 삿포로 그랜드 호텔</div>
 
     <div class="transport-step">
       <div class="step-num airport">1</div>
       <div class="step-content">
         <strong>신치토세공항 도착 (13:45)</strong>
         <p>국제선 터미널 도착 → 수하물 찾기 → 세관 통과</p>
-        <div class="step-detail">💡 국제선↔국내선은 연결통로로 연결. 표지판에 '新千歳空港駅' 따라 이동</div>
+        <div class="step-detail">💡 국제선↔국내선은 연결통로로 연결. JR역 표지판을 따라 국내선 지하 1층으로 이동</div>
       </div>
     </div>
 
@@ -586,22 +583,13 @@
     <div class="transport-step">
       <div class="step-num subway">4</div>
       <div class="step-content">
-        <strong>삿포로역 → 지하철 난보쿠선 → 오도리역 (1정거장)</strong>
-        <p>JR 삿포로역 내 지하철 환승 → 난보쿠선(南北線) 스스키노 방면 승차</p>
+        <strong>삿포로역 → 지하보도(치카호) → 호텔 직결 (도보 8분)</strong>
+        <p>JR 삿포로역 서쪽 개찰구로 나와 지하보도 '치카호(チカホ)' 방면으로 진입</p>
         <div class="step-detail">
-          🚇 삿포로역(さっぽろ) → 오도리역(大通) — 딱 1정거장, 2분<br>
-          💴 요금: 210엔 (Kitaca 자동 차감)<br>
-          📍 오도리역 하차 후 10번 출구 → 도보 3분 → 그란벨 호텔
+          🚶 삿포로역 → 지하보도 8번 출구 방향 도보 8분<br>
+          📍 8번 출구 옆 그랜드 호텔 전용 지하 연결통로 진입 → 엘리베이터로 로비 이동 (눈/비 걱정 없음!)<br>
+          🚌 대안: 신치토세 공항에서 '삿포로 그랜드 호텔 앞'으로 직행하는 공항 리무진 버스 탑승도 가능 (약 80분, 1,300엔)
         </div>
-      </div>
-    </div>
-
-    <div class="transport-step">
-      <div class="step-num tip">💡</div>
-      <div class="step-content">
-        <strong>대안: 리무진 버스 (짐이 많으면)</strong>
-        <p>공항 국내선 14번 승강장 → '삿포로 오도리·스스키노' 노선</p>
-        <div class="step-detail">⏱ 약 70~90분 / 요금 약 1,300엔 / 오도리 공원 앞 정차 → 도보 5분</div>
       </div>
     </div>
   </div>
@@ -646,8 +634,8 @@
     <div class="transport-step">
       <div class="step-num subway">A</div>
       <div class="step-content">
-        <strong>그란벨 호텔 → 오도리역 (도보 3분)</strong>
-        <p>호텔에서 타누키코지 방향으로 나오면 오도리역 10번 출구 바로 연결</p>
+        <strong>삿포로 그랜드 호텔 → 오도리역/삿포로역 (지하 직결)</strong>
+        <p>호텔 지하 연결통로를 통해 지하보도(치카호) 진입 → 오도리역 도보 5분 / 삿포로역 도보 8분</p>
       </div>
     </div>
 
@@ -838,11 +826,10 @@
             <div class="tl-title">호텔 체크인</div>
             <span class="tl-badge badge-move">이동</span>
           </div>
-          <div class="tl-desc">삿포로역 → 지하철 환승 → 오도리역 → 그란벨 호텔 체크인. 짐 올려두고 가볍게 저녁 준비!</div>
+          <div class="tl-desc">삿포로역 → 지하보도(치카호)를 통해 삿포로 그랜드 호텔 체크인. 짐 올려두고 가볍게 저녁 준비!</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>루트:</strong> JR 삿포로역 → 지하철 난보쿠선(🟢) → 오도리역(大通) — 1정거장, 2분</div>
-            <div class="t-row"><strong>요금:</strong> 210엔 (Kitaca 자동 차감)</div>
-            <div class="t-row"><strong>출구:</strong> 오도리역 10번 출구 → 도보 3분 → 그란벨 호텔</div>
+            <div class="t-row"><strong>루트:</strong> JR 삿포로역 서쪽 개찰구 → 지하보도(치카호) 진입 → 도보 8~10분</div>
+            <div class="t-row"><strong>출구:</strong> 지하보도 8번 출구 옆 그랜드 호텔 전용 지하 연결통로 진입 → 엘리베이터로 로비 이동</div>
           </div>
         </div>
       </div>
@@ -856,9 +843,9 @@
             <div class="tl-title">타누키코지 상점가 산책</div>
             <span class="tl-badge badge-shop">쇼핑</span>
           </div>
-          <div class="tl-desc">호텔 바로 옆 150년 역사 아케이드 상점가. 돈키호테 4초메(24시간)에서 약품·화장품·과자 쇼핑. 비·눈 영향 없는 실내 거리라 편안하게!</div>
+          <div class="tl-desc">삿포로의 대표 아케이드 상점가인 타누키코지 산책. 돈키호테 4초메(24시간)에서 의약품·화장품·기념품 쇼핑. 비와 눈의 영향을 받지 않는 쾌적한 실내 아케이드!</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> 그란벨 호텔 도보 1분 — 바로 연결</div>
+            <div class="t-row"><strong>위치:</strong> 호텔에서 지하보도 또는 도보로 오도리/스스키노 방향 이동 (도보 약 8~10분)</div>
             <div class="t-row"><strong>Tip:</strong> 여권 지참 시 면세(5,000엔 이상) / 돈키호테는 24시간이라 나중에 또 가능</div>
           </div>
         </div>
@@ -942,6 +929,9 @@
       <div class="day-header-info">
         <h3>비에이 · 후라노 당일 투어</h3>
         <p>8월 4일 (화) · 삿포로 출발 종일 투어</p>
+        <span style="display:inline-block;margin-top:6px;font-size:0.75rem;padding:3px 10px;background:rgba(255,183,197,0.15);border:1px solid rgba(255,183,197,0.3);border-radius:4px;color:var(--primary-light);">
+          💡 <strong>식사 팁:</strong> 아침은 호텔 조식으로 든든히 해결. 투어 중간 점심은 비에이역 주변에서 해산물이 배제된 가츠동이나 카레 등 가벼운 식사를 하고, 저녁 복귀 후 징기스칸(양고기) 등 고기 중심의 야무진 식사를 즐기는 동선입니다.
+        </span>
       </div>
     </div>
     <div class="timeline">
@@ -1058,14 +1048,16 @@
         <div class="tl-time">20:00 ~ 21:30</div>
         <div class="tl-card">
           <div class="tl-card-header">
-            <div class="tl-icon">🍜</div>
-            <div class="tl-title">저녁 — 스미레 (삿포로 미소 라멘)</div>
-            <span class="tl-badge badge-food">맛집</span>
+            <div class="tl-icon">🍲</div>
+            <div class="tl-title">저녁 — 징기스칸 시로쿠마 OR 스미레 라멘</div>
+            <span class="tl-badge badge-food">선택 맛집</span>
           </div>
-          <div class="tl-desc">삿포로 미소 라멘의 전설. 세 가지 된장을 블렌딩한 진하고 깊은 육수. 투어 후 지친 몸에 딱! 1인 1,000~1,500엔.</div>
+          <div class="tl-desc">투어 귀환 후 기호에 따른 든든한 저녁 식사 선택!
+            <br>• <strong>옵션 A (징기스칸 시로쿠마):</strong> 미슐랭 빕구르망 수록 및 타베로그 백명점. 홋카이도산 최고급 프리미엄 생양고기 직영 전문점 (한국어 메뉴판 있음).
+            <br>• <strong>옵션 B (스미레 라멘):</strong> 삿포로 미소 라멘의 전설. 깊은 풍미의 된장 육수와 알싸한 생강의 환상 조화 (영어 메뉴 있음).</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> 스스키노역 도보 1분 (미나미 3조 니시 3-9-2 피크시스 빌딩 2층)</div>
-            <div class="t-row"><strong>영업:</strong> 17:30~00:30 (투어 귀환 후 타이밍 딱!)</div>
+            <div class="t-row"><strong>시로쿠마:</strong> 스스키노역 도보 3분 / 1인 3,000~5,000엔 / 홋카이도산 국내산 생양고기 맛보기</div>
+            <div class="t-row"><strong>스미레:</strong> 스스키노역 도보 1분 / 1인 1,000~1,500엔 / 밤 12시반까지 영업</div>
           </div>
         </div>
       </div>
@@ -1075,11 +1067,11 @@
         <div class="tl-time">21:30 ~</div>
         <div class="tl-card">
           <div class="tl-card-header">
-            <div class="tl-icon">🛁</div>
-            <div class="tl-title">호텔 귀환 + 노천탕</div>
+            <div class="tl-icon">🏨</div>
+            <div class="tl-title">호텔 귀환 및 휴식</div>
             <span class="tl-badge badge-tip">휴식</span>
           </div>
-          <div class="tl-desc">그란벨 호텔 13층 노천탕 — 하루 종일 돌아다닌 피로를 함께 풀기. 오늘의 하이라이트!</div>
+          <div class="tl-desc">삿포로 그랜드 호텔로 복귀. 안락한 객실에서 가볍게 삿포로 클래식 한정 캔맥주를 곁들이며 오늘 하루 투어 일정 오붓하게 마무리.</div>
         </div>
       </div>
 
@@ -1092,7 +1084,10 @@
       <div class="day-num">03</div>
       <div class="day-header-info">
         <h3>삿포로 시내 완전 탐방</h3>
-        <p>8월 5일 (수) · 시로이 코이비토 → 맥주박물관 → 징기스칸 → 야경</p>
+        <p>8월 5일 (수) · 시로이 코이비토 → 돈카츠 → 맥주박물관 → 와규 야키니쿠</p>
+        <span style="display:inline-block;margin-top:6px;font-size:0.75rem;padding:3px 10px;background:rgba(255,183,197,0.15);border:1px solid rgba(255,183,197,0.3);border-radius:4px;color:var(--primary-light);">
+          💡 <strong>식사 팁:</strong> 아침은 호텔 조식. 점심은 서울에서 맛보기 힘든 두툼한 프리미엄 돈카츠 아오키(SPF 돈카츠), 디저트로 홋카이도 유제품 파르페를 즐기고, 저녁에는 프라이빗한 룸에서 최고급 와규 야키니쿠를 즐기는 완벽한 미식 데이입니다.
+        </span>
       </div>
     </div>
     <div class="timeline">
@@ -1106,7 +1101,7 @@
             <div class="tl-title">호텔 조식 (여유롭게)</div>
             <span class="tl-badge badge-food">조식</span>
           </div>
-          <div class="tl-desc">오늘은 느긋하게! 그란벨 호텔 뷔페 조식 충분히 즐기기. 소금빵 인기 메뉴 챙기기.</div>
+          <div class="tl-desc">오늘은 느긋하게! 일본 전국 조식 랭킹 최상위권인 삿포로 그랜드 호텔의 정갈하고 다채로운 조식 뷔페 충분히 만끽하기.</div>
         </div>
       </div>
 
@@ -1126,6 +1121,23 @@
             <div class="t-row"><strong>도보:</strong> 미야노사와역 2번 출구 → 도보 7분</div>
             <div class="t-row"><strong>요금:</strong> 지하철 280엔 / 공원 입장 800엔 / 영업 10:00~18:00</div>
             <div class="t-row"><strong>Tip:</strong> 오전에 가면 한산해서 여유롭게 카페·과자 체험 가능!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">12:15 ~ 13:30</div>
+        <div class="tl-card" style="border-color: var(--accent);">
+          <div class="tl-card-header">
+            <div class="tl-icon">🐷</div>
+            <div class="tl-title">점심 — 돈카츠 아오키 (とんかつ檍)</div>
+            <span class="tl-badge badge-food">선택 맛집</span>
+          </div>
+          <div class="tl-desc">도쿄의 대표적인 돈카츠 백명점(百名店) 삿포로 지점. 히말라야 핑크 소금과 특제 암염에 찍어 먹는 선홍빛 프리미엄 SPF 돼지고기 돈카츠. 한국에서는 맛보기 힘든 최상급 육즙과 압도적 두께를 현지 합리적인 가격에 가성비 있게 즐길 수 있습니다. (한국어 메뉴판 완비)</div>
+          <div class="transport-inline">
+            <div class="t-row"><strong>위치:</strong> 오도리역/스스키노역 인근 (도보 5분) / 1인 1,500~2,500엔</div>
+            <div class="t-row"><strong>Tip:</strong> 등심(로스)카츠 정식이 간판 메뉴. 소금에 찍어 본연의 맛을 본 뒤, 와사비를 올려 드세요.</div>
           </div>
         </div>
       </div>
@@ -1186,17 +1198,16 @@
       <div class="tl-item">
         <div class="tl-dot"></div>
         <div class="tl-time">19:00 ~ 21:00</div>
-        <div class="tl-card">
+        <div class="tl-card" style="border-color: var(--accent);">
           <div class="tl-card-header">
-            <div class="tl-icon">🐑</div>
-            <div class="tl-title">저녁 — 징기스칸 다루마 (Daruma)</div>
+            <div class="tl-icon">🥩</div>
+            <div class="tl-title">저녁 — 야키니쿠 츠바메 (Wagyu Yakiniku)</div>
             <span class="tl-badge badge-food">맛집</span>
           </div>
-          <div class="tl-desc">삿포로 최고 유명 징기스칸 전문점. 생 양고기를 진한 소스에 찍어 먹는 방식. 숯불 향이 일품. 1인 3,000~6,000엔.</div>
+          <div class="tl-desc">프라이빗한 아늑한 개별 룸(개실)에서 즐기는 최고급 A5 등급 흑모와규 야키니쿠. 한국의 고급 한우 오마카세에서는 1인 20~30만 원을 호가하는 마블링 예술인 부위들을 현지의 매우 착한 가격에 즐길 수 있습니다. (한국어 메뉴판 완비, 룸 완비)</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> 스스키노역 도보 3분 (지점 여러 개 — 본점 추천)</div>
-            <div class="t-row"><strong>⚠️ 주의:</strong> 예약 불가, 현장 대기 필수 / 오픈 30분 전(17:30) 줄 서기 추천</div>
-            <div class="t-row"><strong>대안:</strong> 마츠오 징기스칸 (예약 가능, 삿포로역 B1 에키마에점)</div>
+            <div class="t-row"><strong>위치:</strong> 스스키노역 도보 3분 / 1인 5,000~8,000엔</div>
+            <div class="t-row"><strong>Tip:</strong> 프라이빗 룸으로 되어 있으니 가급적 사전 예약 권장. 와규 모둠(츠바메 세트)과 꽃등심, 규탄(우설) 강력 추천!</div>
           </div>
         </div>
       </div>
@@ -1378,121 +1389,97 @@
 <!-- FOOD -->
 <section id="food">
   <div class="section-label reveal">맛집 가이드</div>
-  <h2 class="section-title reveal">꼭 먹어봐야 할 삿포로 맛집</h2>
-  <p class="section-desc reveal">해산물 제외 / 30대 커플 강력 추천 / 현지 인기 맛집 엄선</p>
+  <h2 class="section-title reveal">검증된 삿포로 미식 명소</h2>
+  <p class="section-desc reveal">해산물 제외 / 타베로그 백명점·미슐랭 급 엄선 / 한국어·영어 대응 가능 인기 찐맛집</p>
 
   <div class="food-grid reveal">
 
     <div class="food-card">
-      <div class="food-category">🐑 징기스칸</div>
+      <div class="food-category">🥩 와규 야키니쿠 (100% 개별 룸)</div>
+      <div class="food-name">야키니쿠 츠바메 (個室焼肉つばめ)</div>
+      <div class="food-meta">
+        <span class="food-tag">스스키노역 도보 3분</span>
+        <span class="food-tag">1인 5,000~8,000엔</span>
+        <span class="food-tag">한국어 메뉴판 완비</span>
+      </div>
+      <div class="food-desc">프라이빗 개별 룸에서 입안에서 살살 녹는 A5 최고급 흑모와규를 구워 먹을 수 있습니다. 서울의 하이엔드 한우 다이닝 대비 절반 수준의 가격으로 호사를 누릴 수 있는 곳입니다. (온라인 예약 지원, 한국어 대응)</div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-category">🐖 프리미엄 돈카츠 (타베로그 백명점)</div>
+      <div class="food-name">돈카츠 아오키 (とんかつ 檍)</div>
+      <div class="food-meta">
+        <span class="food-tag">스스키노/오도리역 도보 5분</span>
+        <span class="food-tag">1인 1,500~2,500엔</span>
+        <span class="food-tag">한국어 메뉴판 완비</span>
+      </div>
+      <div class="food-desc">도쿄 최고의 돈카츠 맛집인 백명점(百名店)의 삿포로 분점. 철저히 관리되어 미디움 레어로도 즐기는 명품 SPF 돼지고기를 사용합니다. 암염 소금에 찍어 본연의 감칠맛을 느끼면 신세계를 경험하게 됩니다.</div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-category">🐑 징기스칸 (미슐랭 / 타베로그 백명점)</div>
+      <div class="food-name">징기스칸 시로쿠마 (しらくま)</div>
+      <div class="food-meta">
+        <span class="food-tag">스스키노역 도보 3분</span>
+        <span class="food-tag">1인 3,000~5,000엔</span>
+        <span class="food-tag">다국어 메뉴판 있음</span>
+      </div>
+      <div class="food-desc">미슐랭 가이드에 등재된 양고기 맛집. 호주산 수입램뿐 아니라 구하기 매우 힘든 홋카이도 국내산 생양고기(서포크 품종)를 서빙합니다. 잡내가 전혀 없고 쫄깃함과 부드러움이 일품입니다.</div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-category">🐑 징기스칸 (삿포로의 전설)</div>
       <div class="food-name">징기스칸 다루마 (だるま)</div>
       <div class="food-meta">
         <span class="food-tag">스스키노역 도보 3분</span>
         <span class="food-tag">1인 3,000~6,000엔</span>
-        <span class="food-tag">현장대기</span>
+        <span class="food-tag">한국어 태블릿 가능</span>
       </div>
-      <div class="food-desc">삿포로 1위 징기스칸. 생 양고기를 진한 특제 소스에 찍어 먹는 방식. 숯불 향과 육즙이 일품. 오픈 30분 전 줄 서기 필수.</div>
-      <a href="https://maps.app.goo.gl/example" class="food-link" target="_blank">📍 구글 지도로 보기 →</a>
+      <div class="food-desc">삿포로 징기스칸 하면 가장 먼저 꼽히는 대장 맛집. 화로에 신선한 양고기와 대파, 양파를 얹어 참숯에 굽는 방식으로 특제 간장 소스 맛이 환상적입니다. 본점 외에 스스키노 내에 여러 지점이 있습니다. (현장 웨이팅)</div>
     </div>
 
     <div class="food-card">
-      <div class="food-category">🐑 징기스칸</div>
-      <div class="food-name">마츠오 징기스칸 에키마에점</div>
-      <div class="food-meta">
-        <span class="food-tag">삿포로역 B1</span>
-        <span class="food-tag">1인 4,000~8,000엔</span>
-        <span class="food-tag">예약 가능</span>
-      </div>
-      <div class="food-desc">양념에 재운 부드러운 양고기 스타일. 초보자도 부담 없이 즐길 수 있음. 무한리필 코스도 인기. 클룩/마이리얼트립에서 예약 가능.</div>
-      <a href="https://www.matsuo1956.jp/" class="food-link" target="_blank">🌐 공식 사이트 →</a>
-    </div>
-
-    <div class="food-card">
-      <div class="food-category">🍛 스프 카레</div>
-      <div class="food-name">가라쿠 (GARAKU)</div>
-      <div class="food-meta">
-        <span class="food-tag">스스키노 근처</span>
-        <span class="food-tag">1,300~1,800엔</span>
-        <span class="food-tag">현장대기</span>
-      </div>
-      <div class="food-desc">삿포로 스프 카레 원조. 진한 닭 육수 베이스 + 통째로 튀긴 채소. 40단계 맵기 조절. 식사시간 전 방문으로 대기 단축.</div>
-    </div>
-
-    <div class="food-card">
-      <div class="food-category">🍛 스프 카레</div>
+      <div class="food-category">🍛 스프 카레 (타베로그 백명점)</div>
       <div class="food-name">스아게 플러스 (Suage+)</div>
       <div class="food-meta">
-        <span class="food-tag">스스키노 인근</span>
-        <span class="food-tag">1,300~1,600엔</span>
-        <span class="food-tag">입문자 추천</span>
+        <span class="food-tag">스스키노역 도보 2분</span>
+        <span class="food-tag">1,300~1,800엔</span>
+        <span class="food-tag">한국어 메뉴판 완비</span>
       </div>
-      <div class="food-desc">큼직한 튀김 채소, 스프 카레 입문자에게 딱. 회전이 빨라 대기가 짧고, 스스키노 인근이라 접근도 편리.</div>
+      <div class="food-desc">삿포로 스프 카레 백명점 중 하나로 꼬치에 꽂아 튀겨낸 야채가 들어가는 원조격 스타일입니다. 카레 맵기와 밥 양을 커스텀해 취향껏 즐길 수 있어 대중적이면서 현지 향이 살아있습니다.</div>
     </div>
 
     <div class="food-card">
-      <div class="food-category">🍜 라멘</div>
-      <div class="food-name">스미레 (すみれ)</div>
+      <div class="food-category">🍛 스프 카레 (감칠맛 1위)</div>
+      <div class="food-name">가라쿠 (GARAKU)</div>
       <div class="food-meta">
-        <span class="food-tag">스스키노역 1분</span>
-        <span class="food-tag">1,000~1,500엔</span>
-        <span class="food-tag">17:30~00:30</span>
+        <span class="food-tag">스스키노 도보 3분</span>
+        <span class="food-tag">1,300~1,900엔</span>
+        <span class="food-tag">한국어 메뉴판 완비</span>
       </div>
-      <div class="food-desc">삿포로 미소 라멘의 전설. 세 가지 된장 블렌딩, 진하고 깊은 육수. 생강향이 특징. 투어 귀환 후 저녁으로 딱!</div>
+      <div class="food-desc">진하고 감칠맛 넘치는 특제 스프로 한국인 관광객 선호도 1위인 곳입니다. 부드러운 닭다리살과 불맛 가득 튀겨낸 브로콜리 토핑이 대단히 인상적입니다. 오픈 전 테이블링 대기 추천.</div>
     </div>
 
     <div class="food-card">
-      <div class="food-category">🍜 라멘</div>
-      <div class="food-name">멘야 유키카제 (麺屋 雪風)</div>
+      <div class="food-category">🍜 미소 라멘 (타베로그 백명점 / 미슐랭)</div>
+      <div class="food-name">스미레 (すみれ) 스스키노점</div>
       <div class="food-meta">
-        <span class="food-tag">스스키노 본점</span>
+        <span class="food-tag">스스키노역 도보 1분</span>
         <span class="food-tag">1,000~1,500엔</span>
-        <span class="food-tag">심야 영업</span>
+        <span class="food-tag">영어 메뉴 지원</span>
       </div>
-      <div class="food-desc">구운 기름의 깊은 풍미. 새벽 3~4시까지 영업해 스스키노 야경 후 야식으로도 인기. 현금만 가능.</div>
+      <div class="food-desc">삿포로 정통 미소 라멘의 명가이자 역사 그 자체인 백명점 맛집. 고온의 돼지기름 막이 덮여 있어 먹는 내내 뜨거움이 유지되며, 생강과 진한 된장의 육수 궁합이 해장에 탁월합니다.</div>
     </div>
 
     <div class="food-card">
-      <div class="food-category">🍨 디저트</div>
+      <div class="food-category">🍨 디저트 (삿포로의 밤 문화)</div>
       <div class="food-name">파르페테리아 팔 (PaL)</div>
       <div class="food-meta">
-        <span class="food-tag">스스키노 남4조 서2초메</span>
+        <span class="food-tag">스스키노 도보 3분</span>
         <span class="food-tag">1,500~2,500엔</span>
-        <span class="food-tag">시메 파르페</span>
+        <span class="food-tag">한국어/영어 메뉴 지원</span>
       </div>
-      <div class="food-desc">예술적이고 화려한 비주얼 파르페. 삿포로 '시메 파르페' 전문점 선구자. 식사 후 마무리로 꼭 방문!</div>
-    </div>
-
-    <div class="food-card">
-      <div class="food-category">☕ 카페</div>
-      <div class="food-name">유키지루시 파라 본점</div>
-      <div class="food-meta">
-        <span class="food-tag">오도리역~삿포로역 사이</span>
-        <span class="food-tag">800~1,500엔</span>
-        <span class="food-tag">홋카이도 유제품</span>
-      </div>
-      <div class="food-desc">홋카이도 유업 명가의 직영 카페. 왕실 납품 '스노 로열' 아이스크림. 레트로 감성. 오도리 산책 후 들리기 딱.</div>
-    </div>
-
-    <div class="food-card">
-      <div class="food-category">☕ 디저트</div>
-      <div class="food-name">밀크 & 파르페 요츠바 화이트코지</div>
-      <div class="food-meta">
-        <span class="food-tag">삿포로역 스텔라 플레이스 B1</span>
-        <span class="food-tag">500~1,200엔</span>
-        <span class="food-tag">역 직결</span>
-      </div>
-      <div class="food-desc">홋카이도 요츠바 유업 직영. 진한 우유 소프트아이스크림 + 파르페. 마지막 날 공항 가기 전 삿포로역에서 먹기 딱!</div>
-    </div>
-
-    <div class="food-card">
-      <div class="food-category">🌾 공항 라멘</div>
-      <div class="food-name">신치토세 라멘 도장</div>
-      <div class="food-meta">
-        <span class="food-tag">공항 국내선 3층</span>
-        <span class="food-tag">1,000~1,500엔</span>
-        <span class="food-tag">귀국 당일</span>
-      </div>
-      <div class="food-desc">홋카이도 유명 라멘 전문점들이 모인 공간. 삿포로 미소 라멘으로 홋카이도 여행의 마지막 식사를 완성!</div>
+      <div class="food-desc">삿포로 특유의 밤문화인 '시메 파르페(식후 파르페)' 유행을 이끈 선구적인 디저트 카페. 예술적인 플레이팅과 신선한 홋카이도산 생크림 및 젤라토의 깊은 달콤함을 경험해 보세요.</div>
     </div>
 
   </div>
@@ -1548,9 +1535,9 @@
       <div class="tip-text">공항↔시내 JR 쾌속 에어포트 uシート(지정석)는 자동발매기에서 미리 예약. 성수기에 넓은 자리 확보.</div>
     </div>
     <div class="tip-card">
-      <div class="tip-icon">🏨</div>
-      <div class="tip-title">노천탕 활용</div>
-      <div class="tip-text">그란벨 호텔 13층 대욕장·노천탕은 매일 저녁 활용! 관광 피로 회복의 핵심. 수건은 객실에서 가져가기.</div>
+      <div class="tip-icon">🚇</div>
+      <div class="tip-title">지하통로(치카호) 활용</div>
+      <div class="tip-text">삿포로 그랜드 호텔은 지하보도(치카호) 8번 출구 방향과 직결됩니다. 날씨가 안 좋거나 짐이 많을 때는 무조건 지하통로를 통해 삿포로역, 오도리역으로 이동하세요!</div>
     </div>
     <div class="tip-card">
       <div class="tip-icon">📱</div>
@@ -1586,6 +1573,98 @@
     });
   }, { threshold: 0.1 });
   revealEls.forEach(el => observer.observe(el));
+
+  // Sakura falling animation (Real-time background particle canvas)
+  (function() {
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100vw';
+    canvas.style.height = '100vh';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '0'; // Behind contents, above body dark background
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const petals = [];
+    const petalCount = 45;
+
+    class Petal {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height - height;
+        this.r = Math.random() * 6 + 3;
+        this.d = Math.random() * 100 + 40;
+        this.speedX = Math.random() * 1.5 - 0.75;
+        this.speedY = Math.random() * 1.2 + 0.8;
+        this.opacity = Math.random() * 0.4 + 0.3;
+        this.flip = Math.random();
+        this.flipSpeed = Math.random() * 0.02 + 0.005;
+      }
+
+      draw() {
+        if (this.y > height || this.x > width || this.x < -this.r) {
+          this.x = Math.random() * width;
+          this.y = -this.r;
+          this.speedX = Math.random() * 1.5 - 0.75;
+          this.speedY = Math.random() * 1.2 + 0.8;
+          this.opacity = Math.random() * 0.4 + 0.3;
+        }
+
+        ctx.beginPath();
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.d * Math.PI / 180);
+        ctx.scale(this.flip, 1);
+        
+        // Beautiful elliptical petal shape
+        ctx.fillStyle = `rgba(255, 183, 197, ${this.opacity})`;
+        ctx.ellipse(0, 0, this.r * 1.6, this.r, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Add a subtle highlight
+        ctx.fillStyle = `rgba(255, 235, 240, ${this.opacity * 0.85})`;
+        ctx.ellipse(-this.r * 0.3, 0, this.r * 0.9, this.r * 0.45, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.restore();
+      }
+
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX + Math.sin(this.y / 40) * 0.4;
+        this.d += this.speedX * 1.5;
+        this.flip += this.flipSpeed;
+        if (this.flip > 1 || this.flip < -1) {
+          this.flipSpeed = -this.flipSpeed;
+        }
+      }
+    }
+
+    for (let i = 0; i < petalCount; i++) {
+      petals.push(new Petal());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      petals.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  })();
 </script>
 </body>
 </html>
