@@ -4,9 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🌸 삿포로 여행 일정 | 8월 3일~6일</title>
-  <meta name="description" content="2026년 8월 3일~6일 삿포로 3박 4일 여행 일정. 비에이/후라노, 삿포로 맥주박물관, 맛집, 교통 정보 완벽 정리." />
+  <meta name="description" content="2026년 8월 3일~6일 삿포로 3박 4일 여행 일정. 비에이/후라노, 삿포로 오도리 맥주 축제, 맛집, 교통 정보 완벽 정리." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
+  <!-- Leaflet (OpenStreetMap 기반, API키 불필요) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <style>
     :root {
       --primary: #FFB7C5;        /* 흩날리는 사쿠라 핑크 */
@@ -16,16 +19,16 @@
       --green: #81C784;          /* 부드러운 그린 */
       --dark: #1F121E;           /* 밤하늘을 수놓은 사쿠라 블랙/다크 플럼 */
       --dark2: #2B182B;          /* 딥 바이올렛 카드 배경용 */
-      --card: rgba(255,183,197,0.08);
-      --card-border: rgba(255,183,197,0.2);
-      --text: #FCE4EC;           /* 눈부신 사쿠라 화이트 */
-      --text-muted: rgba(255,183,197,0.6);
+      --card: rgba(255,236,242,0.10);      /* 시인성 개선: 더 밝고 불투명한 카드 */
+      --card-border: rgba(255,183,197,0.32);
+      --text: #FFF1F5;           /* 눈부신 사쿠라 화이트 */
+      --text-muted: rgba(255,225,235,0.82); /* 시인성 개선: 본문 가독성 상향 */
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       font-family: 'Noto Sans KR', sans-serif;
-      background: var(--dark);
+      background: radial-gradient(ellipse at 50% 0%, #301E30 0%, #241726 45%, var(--dark) 100%) fixed;
       color: var(--text);
       overflow-x: hidden;
     }
@@ -374,6 +377,75 @@
       .timeline::before { left: 12px; }
     }
 
+    /* ── DAY MAP (Leaflet) ── */
+    .day-map-wrap {
+      margin-bottom: 32px;
+      border: 1px solid var(--card-border); border-radius: 16px;
+      overflow: hidden; background: var(--card);
+    }
+    .day-map-head {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding: 14px 18px; font-size: 0.85rem; font-weight: 700;
+      color: var(--primary-light);
+      border-bottom: 1px solid var(--card-border);
+    }
+    .day-map-head .map-legend {
+      margin-left: auto; display: flex; gap: 14px; flex-wrap: wrap;
+      font-size: 0.72rem; font-weight: 500; color: var(--text-muted);
+    }
+    .day-map-head .map-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .day-map-head .map-legend i {
+      width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+    }
+    .map-gmap-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 100px; cursor: pointer;
+      font-size: 0.76rem; font-weight: 700; text-decoration: none;
+      color: #fff; background: linear-gradient(135deg, #4285F4, #34A853);
+      border: 1px solid rgba(255,255,255,0.25);
+      transition: transform 0.2s, box-shadow 0.2s; white-space: nowrap;
+    }
+    .map-gmap-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(66,133,244,0.4); }
+    .day-map { width: 100%; height: 360px; }
+    @media(max-width: 600px) { .day-map { height: 300px; } }
+    /* Leaflet 다크 테마 보정 */
+    .leaflet-container { background: #1a0f1a; font-family: 'Noto Sans KR', sans-serif; }
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+      background: #2B182B; color: var(--text);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .leaflet-popup-content { font-size: 0.82rem; line-height: 1.5; margin: 10px 12px; }
+    .leaflet-popup-content b { color: var(--primary-light); }
+    .leaflet-popup-content .pop-fee { color: var(--accent); font-weight: 600; }
+    .leaflet-container a.leaflet-popup-close-button { color: var(--text-muted); }
+    .map-marker-num {
+      display: flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      color: #fff; font-weight: 800; font-size: 0.8rem;
+      border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+
+    /* ── FEE SUMMARY TABLE ── */
+    .fee-box {
+      background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(224,176,255,0.06));
+      border: 1px solid var(--accent); border-radius: 20px;
+      padding: 28px; margin-bottom: 8px;
+    }
+    .fee-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+    .fee-table th {
+      text-align: left; padding: 10px 12px; color: var(--accent);
+      border-bottom: 1px solid var(--card-border); font-size: 0.78rem; letter-spacing: 0.5px;
+    }
+    .fee-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .fee-table tr:last-child td { border-bottom: none; }
+    .fee-table .fee-yen { color: var(--text); font-weight: 600; white-space: nowrap; }
+    .fee-table .fee-won { color: var(--accent); font-weight: 700; white-space: nowrap; }
+    .fee-table .fee-opt { color: var(--text-muted); font-size: 0.76rem; }
+    .fee-total-row td { border-top: 2px solid var(--accent); font-weight: 800; color: var(--text); padding-top: 14px; }
+    .fee-note { margin-top: 14px; font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
+
     /* scroll reveal */
     .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s, transform 0.6s; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -388,8 +460,10 @@
     <li><a href="#overview">개요</a></li>
     <li><a href="#hotel">호텔</a></li>
     <li><a href="#transport">교통</a></li>
+    <li><a href="#fees">입장료</a></li>
     <li><a href="#itinerary">일정</a></li>
     <li><a href="#food">맛집</a></li>
+    <li><a href="#shopping">쇼핑</a></li>
     <li><a href="#tips">여행팁</a></li>
   </ul>
 </nav>
@@ -402,7 +476,7 @@
     <p class="hero-sub">비에이의 파란 호수, 후라노의 꽃밭, 삿포로의 야경까지<br>둘이서 떠나는 홋카이도 여름 여행</p>
     <div class="hero-tags">
       <span class="hero-tag">🌸 비에이 / 후라노</span>
-      <span class="hero-tag">🍺 삿포로 맥주박물관</span>
+      <span class="hero-tag">🍺 삿포로 맥주 축제</span>
       <span class="hero-tag">🐑 징기스칸</span>
       <span class="hero-tag">🍨 시메 파르페</span>
       <span class="hero-tag">🛍 쇼핑</span>
@@ -512,7 +586,7 @@
       <strong style="color:var(--green);font-size:0.9rem;">교통카드가 없는 경우 — Kitaca 발급</strong>
       <ul style="margin-top:8px;">
         <li><strong>발급 장소</strong>: 신치토세공항역 JR 자동발매기 (한국어 지원)</li>
-        <li><strong>비용</strong>: 2,000엔 (보증금 500엔 + 충전금 1,500엔)</li>
+        <li><strong>비용</strong>: 2,000엔 [약 19,000원 / 보증금 500엔(약 4,750원) + 충전금 1,500엔(약 14,250원)]</li>
         <li><strong>환불</strong>: 귀국 전 신치토세공항역 유인 창구에서 보증금·잔액 전액 환불 가능</li>
         <li><strong>충전</strong>: JR역, 지하철역 자동발매기 어디서나 가능</li>
       </ul>
@@ -549,9 +623,9 @@
         <strong>JR 쾌속 에어포트 탑승 → 삿포로역 (약 37분)</strong>
         <p>신치토세공항역 플랫폼 → '삿포로 방면 쾌속 에어포트' 탑승</p>
         <div class="step-detail">
-          🚃 요금: 1,150엔 (Kitaca 자동 차감)<br>
+          🚃 요금: 1,150엔 (약 10,900원, Kitaca 자동 차감)<br>
           ⏱ 배차간격: 매 15~20분<br>
-          💺 지정석(uシート): 추가 840엔 — 자리 넓고 쾌적, 추천!<br>
+          💺 지정석(uシート): 추가 840엔 (약 8,000원) — 자리 넓고 쾌적, 추천!<br>
           🛑 정차역: 新千歳空港 → 南千歳 → 恵庭 → 北広島 → 札幌 (무정차 또는 2~3 중간역)
         </div>
       </div>
@@ -565,7 +639,7 @@
         <div class="step-detail">
           🚶 삿포로역 → 지하보도 8번 출구 방향 도보 8분<br>
           📍 8번 출구 옆 그랜드 호텔 전용 지하 연결통로 진입 → 엘리베이터로 로비 이동 (눈/비 걱정 없음!)<br>
-          🚌 대안: 신치토세 공항에서 '삿포로 그랜드 호텔 앞'으로 직행하는 공항 리무진 버스 탑승도 가능 (약 80분, 1,300엔)
+          🚌 대안: 신치토세 공항에서 '삿포로 그랜드 호텔 앞'으로 직행하는 공항 리무진 버스 탑승도 가능 (약 80분, 1,300엔 / 약 12,350원)
         </div>
       </div>
     </div>
@@ -596,7 +670,7 @@
             <td style="padding:10px 12px;font-weight:600;">도자이선(東西線)</td>
             <td style="padding:10px 12px;color:#F44336;">🔴 오렌지</td>
             <td style="padding:10px 12px;color:var(--text-muted);">宮の沢 ← 大通 → バスセンター前</td>
-            <td style="padding:10px 12px;color:var(--text-muted);">시로이 코이비토 파크(미야노사와역)</td>
+            <td style="padding:10px 12px;color:var(--text-muted);">시내 서부·미야노사와 방면 (이번 일정 미사용)</td>
           </tr>
           <tr>
             <td style="padding:10px 12px;font-weight:600;">도호선(東豊線)</td>
@@ -619,29 +693,20 @@
     <div class="transport-step">
       <div class="step-num subway">B</div>
       <div class="step-content">
-        <strong>시로이 코이비토 파크 이동법</strong>
-        <p>오도리역 → 도자이선(🔴) 미야노사와(宮の沢) 방면 → 미야노사와역 하차 (5정거장, 약 11분) → 도보 7분</p>
-        <div class="step-detail">💴 요금: 280엔 / 미야노사와역은 도자이선 종점이라 그냥 끝까지 타면 됨</div>
+        <strong>삿포로 오도리 맥주 축제 (오도리 비어가든) 이동법</strong>
+        <p>호텔(삿포로 그랜드 호텔) 지하 연결통로(치카호) 진입 → 오도리역 방면으로 도보 5분 이동 → 오도리 공원 5~11초메 행사장 도착</p>
+        <div class="step-detail">
+          🚶 접근성: 호텔에서 도보 5분 거리로 접근성이 매우 뛰어납니다.<br>
+          ⏱ 운영시간: 12:00 ~ 21:00 (라스트 오더 20:30~20:45)<br>
+          🎫 좌석예약: 사전 예약석인 '오모테나시 시트' 예약 가능
+        </div>
       </div>
     </div>
 
     <div class="transport-step">
       <div class="step-num subway">C</div>
       <div class="step-content">
-        <strong>삿포로 맥주박물관 이동법</strong>
-        <p>삿포로역 앞 버스 정류장 → '88번 Loop 버스' 탑승 → 'サッポロビール園' 정류장 하차 (약 20분)</p>
-        <div class="step-detail">
-          💴 요금: 약 210엔<br>
-          🔄 또는: 지하철 도호선 히가시쿠야쿠쇼마에역(東区役所前) 하차 → 도보 13분<br>
-          ⏱ 박물관 영업: 11:00~18:00 (월요일 휴관 없음!) / 2026.7.1부터 입장 유료화
-        </div>
-      </div>
-    </div>
-
-    <div class="transport-step">
-      <div class="step-num subway">D</div>
-      <div class="step-content">
-        <strong>홋카이도 대학 이동법</strong>
+        <strong>홋카이도 대학 이동법 (선택 — 시간 여유 시)</strong>
         <p>지하철 난보쿠선 → 삿포로역(さっぽろ) 하차 → 북쪽 출구로 나와 도보 10분</p>
         <div class="step-detail">🌿 캠퍼스 자유 입장 / 관광 안내소에서 지도 수령 가능</div>
       </div>
@@ -684,8 +749,8 @@
           </tr>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
             <td style="padding:10px 12px;font-weight:700;color:var(--text);">12:00~14:30</td>
-            <td style="padding:10px 12px;">공항 내 라멘 도장 + 면세점</td>
-            <td style="padding:10px 12px;color:var(--text-muted);">'신치토세 라멘 도장' — 홋카이도 라멘 마지막 한 그릇!</td>
+            <td style="padding:10px 12px;">공항에서 간단히 점심 + 면세점</td>
+            <td style="padding:10px 12px;color:var(--text-muted);">조식을 든든히 먹었으니 3층 식당가에서 가볍게 + 기념품 마무리</td>
           </tr>
           <tr>
             <td style="padding:10px 12px;font-weight:700;color:var(--accent);">15:05</td>
@@ -698,6 +763,79 @@
 
     <div style="margin-top:16px;padding:14px;background:rgba(255,107,157,0.08);border:1px solid rgba(255,107,157,0.3);border-radius:10px;font-size:0.82rem;color:var(--text-muted);">
       ⚠️ <strong style="color:var(--accent)">주의</strong>: 공항 보안검색 대기가 성수기(8월)에 길어질 수 있으니 출발 2.5~3시간 전 공항 도착을 권장합니다.
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- FEE SUMMARY -->
+<section id="fees">
+  <div class="section-label reveal">입장료 & 예산</div>
+  <h2 class="section-title reveal">명소 입장료 한눈에 보기</h2>
+  <p class="section-desc reveal">타워·전망대·테마파크 입장료를 엔화와 한화로 정리했어요. (환율 기준: <strong>100엔 ≈ 950원</strong> / 현지 상황에 따라 변동)</p>
+
+  <div class="fee-box reveal">
+    <div style="overflow-x:auto;">
+      <table class="fee-table">
+        <thead>
+          <tr>
+            <th>명소 (방문일)</th>
+            <th>입장/이용료 (1인)</th>
+            <th>한화 환산</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🕰️ 삿포로 시계탑 <span class="fee-opt">(Day 1)</span></td>
+            <td class="fee-yen">무료 (외관)</td>
+            <td class="fee-won">0원</td>
+            <td class="fee-opt">내부 관람 시 200엔</td>
+          </tr>
+          <tr>
+            <td>🗼 삿포로 TV 타워 전망대 <span class="fee-opt">(Day 1)</span></td>
+            <td class="fee-yen">1,000엔</td>
+            <td class="fee-won">약 9,500원</td>
+            <td class="fee-opt">해 질 무렵 야경 추천</td>
+          </tr>
+          <tr>
+            <td>🌄 사계채의 언덕 <span class="fee-opt">(Day 2 · 비에이)</span></td>
+            <td class="fee-yen">500엔</td>
+            <td class="fee-won">약 4,750원</td>
+            <td class="fee-opt">현금 필요 / 투어 코스에 따라 상이</td>
+          </tr>
+          <tr>
+            <td>💜 팜 토미타 <span class="fee-opt">(Day 2 · 후라노)</span></td>
+            <td class="fee-yen">무료</td>
+            <td class="fee-won">0원</td>
+            <td class="fee-opt">입장 무료 / 라벤더 아이스크림 별도</td>
+          </tr>
+          <tr>
+            <td>🍺 오도리 맥주 축제 <span class="fee-opt">(Day 3)</span></td>
+            <td class="fee-yen">입장 무료</td>
+            <td class="fee-won">0원</td>
+            <td class="fee-opt">맥주·안주는 개별 구매 (생맥주 약 600~800엔)</td>
+          </tr>
+          <tr>
+            <td>🚠 모이와산 로프웨이 (왕복) <span class="fee-opt">(Day 3)</span></td>
+            <td class="fee-yen">2,100엔</td>
+            <td class="fee-won">약 20,000원</td>
+            <td class="fee-opt">로프웨이 + 미니 케이블카 통합권</td>
+          </tr>
+          <tr class="fee-total-row">
+            <td>유료 명소 합계 (1인)</td>
+            <td class="fee-yen">약 3,600엔</td>
+            <td class="fee-won">약 34,200원</td>
+            <td class="fee-opt">2인 기준 약 68,400원</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="fee-note">
+      ※ <strong>비에이/후라노 일일투어</strong>는 입장료가 아닌 패키지 상품으로 별도예요 — 1인 약 <strong>5만~8만 원</strong> (점심 포함 여부에 따라 상이, 클룩·마이리얼트립·KKday).<br>
+      ※ <strong>교통비</strong>는 입장료와 별개: JR 쾌속 에어포트 편도 1,150엔(약 10,900원), 시내 지하철 1회 210~280엔(약 2,000~2,660원), 모이와산행 트램 230엔(약 2,200원).<br>
+      ※ 위 합계는 유료 명소 3곳(TV타워·사계채언덕·모이와산) 기준이며, 선택 방문지를 빼면 더 줄어듭니다.
     </div>
   </div>
 </section>
@@ -722,9 +860,19 @@
     <div class="day-header">
       <div class="day-num">01</div>
       <div class="day-header-info">
-        <h3>도착 · 쇼핑 · 스스키노 야경</h3>
+        <h3>도착 · 돈키호테 쇼핑 · 징기스칸</h3>
         <p>8월 3일 (월) · 인천 11:00 출발 → 삿포로 13:45 도착</p>
+        <span style="display:inline-block;margin-top:6px;font-size:0.75rem;padding:3px 10px;background:rgba(255,183,197,0.15);border:1px solid rgba(255,183,197,0.3);border-radius:4px;color:var(--primary-light);">
+          💡 <strong>컨셉:</strong> 호텔에 짐 풀고 → <strong>돈키호테 타누키코지 별관</strong>에서 쇼핑 → <strong>18:00 다이코쿠야 징기스칸</strong>으로 첫날 저녁. 식후엔 오도리 야경까지 도보로 이어지는 무리 없는 동선이에요. (모이와산 야경은 동선이 더 좋은 3일차)
+        </span>
       </div>
+    </div>
+
+    <div class="day-map-wrap reveal">
+      <div class="day-map-head">🗺️ Day 1 동선 — 공항 → 삿포로역 → 호텔 → 돈키호테 별관 → 스스키노(징기스칸) → 오도리 야경
+        <span class="map-legend"><span><i style="background:var(--primary)"></i>방문지</span><span><i style="background:var(--accent2)"></i>이동 동선</span></span>
+      </div>
+      <div class="day-map" id="map-day0"></div>
     </div>
     <div class="timeline">
 
@@ -750,7 +898,7 @@
             <div class="tl-title">입국 심사 + 교통카드 발급</div>
             <span class="tl-badge badge-move">이동 준비</span>
           </div>
-          <div class="tl-desc">수하물 수취 → 입국 심사(여권 필수) → 국내선 터미널로 이동 → JR역에서 Kitaca 발급 (2,000엔)</div>
+          <div class="tl-desc">수하물 수취 → 입국 심사(여권 필수) → 국내선 터미널로 이동 → JR역에서 Kitaca 발급 [2,000엔 (약 19,000원)]</div>
           <div class="transport-inline">
             <div class="t-row"><strong>Kitaca 발급:</strong> 국내선 터미널 지하 1층 JR 자동발매기, 한국어 선택 가능</div>
           </div>
@@ -768,10 +916,10 @@
           </div>
           <div class="tl-desc">신치토세공항역 플랫폼 → 삿포로 방면 쾌속 에어포트 탑승</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>요금:</strong> 1,150엔 (Kitaca 자동 차감)</div>
+            <div class="t-row"><strong>요금:</strong> 1,150엔 (약 10,900원, Kitaca 자동 차감)</div>
             <div class="t-row"><strong>소요:</strong> 약 37분 / 배차 15~20분 간격</div>
             <div class="t-row"><strong>정차:</strong> 新千歳空港 → (南千歳·恵庭·北広島) → 札幌역</div>
-            <div class="t-row"><strong>Tip:</strong> uシート(지정석) 추가 840엔 — 넓고 쾌적, 성수기 추천</div>
+            <div class="t-row"><strong>Tip:</strong> uシート(지정석) 추가 840엔 (약 8,000원) — 넓고 쾌적, 성수기 추천</div>
           </div>
         </div>
       </div>
@@ -782,28 +930,29 @@
         <div class="tl-card">
           <div class="tl-card-header">
             <div class="tl-icon">🛍</div>
-            <div class="tl-title">삿포로역 — 스텔라 플레이스 쇼핑</div>
+            <div class="tl-title">삿포로역 쇼핑 — 스텔라·다이마루·@cosme·지하상가</div>
             <span class="tl-badge badge-shop">쇼핑</span>
           </div>
-          <div class="tl-desc">짐을 코인락커에 맡기고 가볍게 쇼핑! 삿포로역 직결 최대 쇼핑몰. 다이마루 지하 식품관에서 홋카이도 과자·기념품 선점. 무인양품, 브랜드샵 등.</div>
+          <div class="tl-desc">짐은 코인락커에 맡기고 삿포로역 권역을 가볍게 한 바퀴! 도착일이니 본격 구매보단 <strong>찜 위주</strong>로 둘러보고, 무거운 선물은 마지막 날에.</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> JR 삿포로역 도착 후 바로 연결 (개찰구 나와서 에스타/스텔라 방면)</div>
-            <div class="t-row"><strong>코인락커:</strong> 삿포로역 내 곳곳에 있음 — 짐 맡기고 자유롭게</div>
-            <div class="t-row"><strong>추천:</strong> 롯카테이, 마루세이 버터샌드, 시로이 코이비토 한정 상품</div>
+            <div class="t-row"><strong>🛍 스텔라플레이스:</strong> 삿포로역 직결 최대 몰 — 패션·잡화·서점</div>
+            <div class="t-row"><strong>💄 @cosme STORE:</strong> 스텔라플레이스 <strong>이스트 4F</strong> — 도내 최대 코스메 직영점 (10:00~21:00, 면세)</div>
+            <div class="t-row"><strong>🏬 다이마루 백화점:</strong> 삿포로역 직결 / 지하 식품관(롯카테이·마루세이 버터샌드) — 선물 본구매는 Day4에</div>
+            <div class="t-row"><strong>🚇 지하상가:</strong> 아피아(APIA, 삿포로역 지하) / 오로라타운·폴타운(오도리~스스키노 연결) — 비·눈 안 맞고 호텔까지 치카호 직결</div>
           </div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">16:30 ~ 17:00</div>
+        <div class="tl-time">16:30 ~ 16:50</div>
         <div class="tl-card">
           <div class="tl-card-header">
             <div class="tl-icon">🏨</div>
-            <div class="tl-title">호텔 체크인</div>
+            <div class="tl-title">호텔 체크인 + 짐 풀기</div>
             <span class="tl-badge badge-move">이동</span>
           </div>
-          <div class="tl-desc">삿포로역 → 지하보도(치카호)를 통해 삿포로 그랜드 호텔 체크인. 짐 올려두고 가볍게 저녁 준비!</div>
+          <div class="tl-desc">삿포로역 → 지하보도(치카호)를 통해 삿포로 그랜드 호텔 체크인. 방에 짐 올려두고 가볍게 정리한 뒤, 바로 타누키코지 돈키호테 별관으로 출발(도보 8분)!</div>
           <div class="transport-inline">
             <div class="t-row"><strong>루트:</strong> JR 삿포로역 서쪽 개찰구 → 지하보도(치카호) 진입 → 도보 8~10분</div>
             <div class="t-row"><strong>출구:</strong> 지하보도 8번 출구 옆 그랜드 호텔 전용 지하 연결통로 진입 → 엘리베이터로 로비 이동</div>
@@ -813,85 +962,73 @@
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">17:00 ~ 18:00</div>
-        <div class="tl-card">
+        <div class="tl-time">17:00 ~ 17:50 🛍 첫 쇼핑</div>
+        <div class="tl-card" style="border-color: var(--accent2);">
           <div class="tl-card-header">
-            <div class="tl-icon">🛍</div>
-            <div class="tl-title">타누키코지 상점가 산책</div>
+            <div class="tl-icon">🛒</div>
+            <div class="tl-title">MEGA 돈키호테 타누키코지 별관 (모유쿠 삿포로)</div>
             <span class="tl-badge badge-shop">쇼핑</span>
           </div>
-          <div class="tl-desc">삿포로의 대표 아케이드 상점가인 타누키코지 산책. 돈키호테 4초메(24시간)에서 의약품·화장품·기념품 쇼핑. 비와 눈의 영향을 받지 않는 쾌적한 실내 아케이드!</div>
+          <div class="tl-desc">호텔에 짐 풀고 바로 <strong>돈키호테 타누키코지 별관</strong>으로! 타누키코지 아케이드 <strong>南2조西3</strong>의 <strong>모유쿠 삿포로(MOYUK)</strong> 건물에 있어서, 쇼핑 끝나고 아케이드를 그대로 따라 걸으면 저녁 먹을 스스키노까지 이어져요. 화장품·간식·약·생필품을 한 번에, <strong>새벽 2시까지 영업</strong>이라 첫날 못 산 건 나중에 다시 와도 OK.</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> 호텔에서 지하보도 또는 도보로 오도리/스스키노 방향 이동 (도보 약 8~10분)</div>
-            <div class="t-row"><strong>Tip:</strong> 여권 지참 시 면세(5,000엔 이상) / 돈키호테는 24시간이라 나중에 또 가능</div>
+            <div class="t-row"><strong>위치:</strong> 中央区 南2조西3-20 / 오도리역 도보 3분 · 스스키노역 도보 5분 (호텔에서 도보 8분)</div>
+            <div class="t-row"><strong>영업:</strong> 10:00 ~ 다음날 02:00 · 연중무휴 / <strong>면세 카운터 있음</strong></div>
+            <div class="t-row"><strong>🧺 같은 건물(MOYUK):</strong> 로프트·스탠다드 프로덕트 등 감성 잡화 (~20:30) — 시간 남으면 같이</div>
+            <div class="t-row"><strong>Tip:</strong> 면세는 한 매장 5,500엔(약 52,000원) 이상 + 여권 필수. 첫날은 가볍게, 무거운 선물은 마지막 날에!</div>
           </div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">18:00 ~ 18:20</div>
-        <div class="tl-card">
+        <div class="tl-time">18:00 ~ 19:30 🐑 하이라이트</div>
+        <div class="tl-card" style="border-color: var(--accent);">
           <div class="tl-card-header">
-            <div class="tl-icon">🕰</div>
-            <div class="tl-title">삿포로 시계탑 + 오도리 공원</div>
-            <span class="tl-badge badge-tour">관광</span>
-          </div>
-          <div class="tl-desc">1878년 건축 시계탑 외관 사진. 오도리 공원은 저녁 조명이 예쁘고 8월엔 여름 비어가든 운영. 산책하며 저녁 분위기 up!</div>
-          <div class="transport-inline">
-            <div class="t-row"><strong>시계탑:</strong> 오도리역 도보 5분 북쪽</div>
-            <div class="t-row"><strong>오도리 공원:</strong> 시계탑에서 도보 2분</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-time">18:30 ~ 20:00</div>
-        <div class="tl-card">
-          <div class="tl-card-header">
-            <div class="tl-icon">🍛</div>
-            <div class="tl-title">저녁 — 가라쿠 (スープカレー)</div>
+            <div class="tl-icon">🐑</div>
+            <div class="tl-title">저녁 — 아사히카와 징기스칸 다이코쿠야 삿포로 1호점</div>
             <span class="tl-badge badge-food">맛집</span>
           </div>
-          <div class="tl-desc">삿포로 스프 카레 원조. 진한 닭 육수에 통 채소를 얹은 홋카이도 소울푸드. 40단계 맵기 조절 가능. 1인 1,300~1,800엔.</div>
+          <div class="tl-desc">2002년 아사히카와에서 창업한 <strong>줄서는 징기스칸 노포</strong>의 삿포로 1호점(旭川成吉思汗 大黒屋 札幌一号店). 숯불 화로에 생양고기를 구워 육즙을 가두는 방식으로, 잡내 없이 부드러운 <strong>생램</strong>이 간판. 여행 첫날 저녁을 홋카이도 대표 메뉴로 시작합니다.</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> 삿포로역 → 지하철 난보쿠선(🟢) → 스스키노역(すすきの) 하차 → 도보 3분</div>
-            <div class="t-row"><strong>Tip:</strong> 오픈 대기 짧게, 피크타임(19:00~) 전에 가는 것 추천</div>
+            <div class="t-row"><strong>위치:</strong> 中央区 南4조西2-10-6, 南4西2 빌딩 <strong>2층</strong> / 호스이스스키노역 도보 1분 · 스스키노역 도보 4분 (돈키호테 별관에서 도보 7분)</div>
+            <div class="t-row"><strong>영업:</strong> 월~금 17:00~23:30 (8/3은 월요일) / 주말·공휴일 16:00~23:30</div>
+            <div class="t-row"><strong>가격:</strong> 다이코쿠 세트(양고기 4종 모둠) 2,860엔 (약 27,200원) · 다이코쿠 찹 1,320엔 (약 12,500원) / 술 포함 1인 예산 약 5,000~6,000엔 (약 47,500원 ~ 57,000원)</div>
+            <div class="t-row"><strong>⚠️ 예약 권장:</strong> 인기점이라 워크인은 대기가 깁니다. 전화 <strong>011-211-1429</strong> 또는 넷 예약(토레타)으로 미리 잡아두세요 — <strong>좌석 이용 90분제</strong></div>
           </div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">20:30 ~ 21:30</div>
+        <div class="tl-time">19:45 ~ 20:30</div>
         <div class="tl-card">
           <div class="tl-card-header">
-            <div class="tl-icon">🎡</div>
-            <div class="tl-title">노르베사 관람차 (야경)</div>
-            <span class="tl-badge badge-tour">야경</span>
+            <div class="tl-icon">🗼</div>
+            <div class="tl-title">오도리 공원 & 시계탑 & 삿포로 TV 타워 (야경)</div>
+            <span class="tl-badge badge-tour">관광</span>
           </div>
-          <div class="tl-desc">스스키노 한복판 7층 옥상 관람차. 삿포로 야경을 한눈에. 커플 필수 코스. 1인 800~1,000엔. 10~15분 소요.</div>
+          <div class="tl-desc">저녁 먹고 소화시킬 겸 오도리까지 도보 산책. 8월 일몰이 약 19시라 이 시간엔 이미 <strong>야경 모드</strong>예요. 1878년 건축된 시계탑 외관을 둘러본 뒤, 오도리 공원 동쪽 끝 TV 타워 전망대에 올라 불 켜진 삿포로 시내를 내려다봅니다.</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> 스스키노역 2번 출구 도보 2분 / '노르베사' 건물 7층</div>
-            <div class="t-row"><strong>영업:</strong> 일~목 11:00~23:00 / 금토 ~01:00</div>
+            <div class="t-row"><strong>이동:</strong> 다이코쿠야(南4西2) → 오도리 공원까지 도보 약 8분 (스스키노~오도리 직선)</div>
+            <div class="t-row"><strong>시계탑:</strong> 오도리역 도보 5분 북쪽 / 외관 관람 무료 (야간 라이트업)</div>
+            <div class="t-row"><strong>🗼 TV 타워 전망대 요금:</strong> 성인 1인 <strong>1,000엔 (약 9,500원)</strong> / 22:00까지 (최종 입장 21:50)</div>
           </div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">21:30 ~ 22:30</div>
+        <div class="tl-time">20:40 ~ 21:40</div>
         <div class="tl-card">
           <div class="tl-card-header">
             <div class="tl-icon">🍨</div>
             <div class="tl-title">시메 파르페 — 파르페테리아 팔</div>
             <span class="tl-badge badge-food">디저트</span>
           </div>
-          <div class="tl-desc">삿포로의 독특한 문화 '시메 파르페(식사 마무리 파르페)'. 예술적 비주얼로 유명한 전문점. 여행 첫날 기념으로!</div>
+          <div class="tl-desc">삿포로의 독특한 문화 '시메 파르페(식사 마무리 파르페)'. 예술적 비주얼로 유명한 전문점. 여행 첫날 기념으로! 1인 약 1,500~2,500엔 (약 14,250원 ~ 23,750원).</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> 스스키노역 도보 3분 / 남4조 서2초메</div>
-            <div class="t-row"><strong>Tip:</strong> 인기 많으니 저녁 후 바로 이동 추천</div>
+            <div class="t-row"><strong>위치:</strong> 스스키노역 도보 3분 / 남4조 서2초메 (다이코쿠야와 같은 블록, TV 타워에서 도보 8분)</div>
+            <div class="t-row"><strong>Tip:</strong> 첫날은 여기까지 가볍게! 푹 쉬고 내일 투어 컨디션을 챙기세요 (모이와산 야경은 3일차에)</div>
           </div>
         </div>
       </div>
@@ -905,143 +1042,218 @@
       <div class="day-num">02</div>
       <div class="day-header-info">
         <h3>비에이 · 후라노 당일 투어</h3>
-        <p>8월 4일 (화) · 삿포로 출발 종일 투어</p>
+        <p>8월 4일 (화) · 홋카이도랩 비에이·후라노 1일 투어 (07:50 집합 ~ 19:00 종료)</p>
         <span style="display:inline-block;margin-top:6px;font-size:0.75rem;padding:3px 10px;background:rgba(255,183,197,0.15);border:1px solid rgba(255,183,197,0.3);border-radius:4px;color:var(--primary-light);">
-          💡 <strong>식사 팁:</strong> 아침은 호텔 조식으로 든든히 해결. 투어 중간 점심은 비에이역 주변에서 해산물이 배제된 가츠동이나 카레 등 가벼운 식사를 하고, 저녁 복귀 후 징기스칸(양고기) 등 고기 중심의 야무진 식사를 즐기는 동선입니다.
+          💡 <strong>식사 팁:</strong> 아침은 호텔 조식으로 든든히 해결. 투어 중간 점심은 비에이역 주변에서 해산물이 배제된 가츠동·소바 등 가벼운 식사를 하고, 저녁 복귀 후 스스키노에서 <strong>스프카레 킹</strong>으로 따뜻하게 마무리하는 동선입니다. (징기스칸은 1일차에 다이코쿠야에서 먹었어요)
         </span>
       </div>
+    </div>
+
+    <div class="day-map-wrap reveal">
+      <div class="day-map-head">🗺️ Day 2 동선 — 삿포로 → 사계채의 언덕 → 패치워크 → 비에이역(점심) → 청의 호수 → 흰수염폭포 → 팜토미타 → 삿포로
+        <span class="map-legend"><span><i style="background:var(--primary)"></i>투어 코스</span><span><i style="background:var(--accent2)"></i>버스 동선</span></span>
+      </div>
+      <div class="day-map" id="map-day1"></div>
+      <div style="padding:10px 18px;font-size:0.75rem;color:var(--text-muted);border-top:1px solid var(--card-border);">📍 삿포로 → 비에이/후라노는 편도 약 130km(버스 2시간+). 종일 투어라 이동 시간이 길어 <strong>다른 날과 절대 묶지 말 것</strong> — 2일차를 통째로 비워둔 이유예요.</div>
     </div>
     <div class="timeline">
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">07:30 ~ 08:00</div>
+        <div class="tl-time">06:50 ~ 07:30</div>
         <div class="tl-card">
           <div class="tl-card-header">
             <div class="tl-icon">🍳</div>
-            <div class="tl-title">호텔 조식 + 출발 준비</div>
+            <div class="tl-title">호텔 조식 (일찍) + 출발 준비</div>
             <span class="tl-badge badge-food">조식</span>
           </div>
-          <div class="tl-desc">조식 뷔페 이용 / 투어 버스 출발 시간에 맞춰 준비. 선크림, 편한 운동화, 얇은 겉옷 챙기기.</div>
+          <div class="tl-desc">07:50 집합이라 조식은 일찍! 그랜드 호텔 조식장 오픈 시간 확인 후 서둘러 식사. 선크림, 편한 운동화, 얇은 겉옷 챙기고 07:30에는 삿포로역으로 출발.</div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">08:00 ~ 08:30</div>
-        <div class="tl-card">
+        <div class="tl-time">07:50 집합 · 08:00 출발</div>
+        <div class="tl-card" style="border-color: var(--primary);">
           <div class="tl-card-header">
             <div class="tl-icon">🚌</div>
-            <div class="tl-title">투어 버스 집결 & 출발</div>
-            <span class="tl-badge badge-move">이동</span>
+            <div class="tl-title">투어 집결 — JR 삿포로역 북쪽 출구</div>
+            <span class="tl-badge badge-move">집결</span>
           </div>
-          <div class="tl-desc">대부분 업체가 삿포로역 앞 또는 지정 호텔 픽업. 예약 시 집결 장소 확인 필수.</div>
+          <div class="tl-desc">예약 상품: <strong>홋카이도랩(네이버 스마트스토어) 비에이·후라노 1일 투어</strong>. 집합 장소 <strong>JR 삿포로역 북쪽 출구</strong>, 집합 07:50 / 최대 10분 대기 후 08:00 출발. (운행 6/1~9/30)</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>예약처:</strong> 클룩(Klook), 마이리얼트립, KKday 검색 — '삿포로 비에이 후라노 한국어 투어'</div>
-            <div class="t-row"><strong>비용:</strong> 1인 5만~8만 원 (점심 포함 여부 상이)</div>
-            <div class="t-row"><strong>⚠️ 주의:</strong> 8월 성수기는 1~2개월 전 예약 필수! 매진 매우 잦음</div>
+            <div class="t-row"><strong>호텔→집결:</strong> 그랜드 호텔 → 삿포로역 북쪽 출구 지하보도+도보 약 10~12분 → 늦지 않게 07:30 출발</div>
+            <div class="t-row"><strong>종료:</strong> 18:50~19:00 / 삿포로역 또는 스스키노 선택 하차 가능</div>
+            <div class="t-row"><strong>⚠️ 주의:</strong> 8월 성수기 매진 잦음 — 미리 예약 + 집합 시간 엄수</div>
           </div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">10:30 ~ 12:00</div>
+        <div class="tl-time">~ 09:00</div>
         <div class="tl-card">
           <div class="tl-card-header">
-            <div class="tl-icon">💙</div>
-            <div class="tl-title">비에이 — 청의 호수 (아오이이케)</div>
-            <span class="tl-badge badge-tour">관광</span>
+            <div class="tl-icon">🚏</div>
+            <div class="tl-title">고속도로 휴게소 정차 (약 10~15분)</div>
+            <span class="tl-badge badge-move">이동</span>
           </div>
-          <div class="tl-desc">신비로운 파란 코발트빛 호수. 계절·날씨 무관하게 아름다운 명소. 자작나무가 물에 잠긴 비현실적 풍경. 사진 필수!</div>
-          <div class="transport-inline">
-            <div class="t-row"><strong>8월 특징:</strong> 주변 초목이 진한 초록 → 파란 물과 대비가 극적으로 아름다움</div>
-            <div class="t-row"><strong>근처:</strong> 시라히게 폭포(흰 수염 폭포) — 도보 15분 거리, 세트 관람</div>
-          </div>
+          <div class="tl-desc">삿포로 → 비에이는 편도 약 2시간. 중간 휴게소(스나가와/이와미자와 등)에서 한 번 정차 — 화장실·간단 간식 타임.</div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">12:00 ~ 13:30</div>
+        <div class="tl-time">10:00 ~ 11:00 · 체류 50~60분</div>
         <div class="tl-card">
           <div class="tl-card-header">
             <div class="tl-icon">🌄</div>
-            <div class="tl-title">비에이 — 패치워크 언덕 & 사계채의 언덕</div>
+            <div class="tl-title">① 사계채의 언덕 (시키사이노오카)</div>
             <span class="tl-badge badge-tour">관광</span>
           </div>
-          <div class="tl-desc">색색깔 꽃이 펼쳐진 완만한 구릉지. 8월엔 해바라기가 절정! 언덕 위 카페에서 점심 또는 간식.</div>
+          <div class="tl-desc">색색의 꽃이 융단처럼 펼쳐진 비에이 대표 꽃밭. 8월엔 샐비어·해바라기·백일초가 절정! 알록달록 사진 명당.</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>8월 볼거리:</strong> 해바라기(절정!), 안개꽃, 백일초 — 알록달록 꽃밭 최적기</div>
+            <div class="t-row"><strong>입장료:</strong> 성인 1인 <strong>500엔 (약 4,750원)</strong> (현금 / 투어 안내 기준)</div>
+            <div class="t-row"><strong>체류:</strong> 8월(7/1~) 기준 50~60분</div>
           </div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">13:30 ~ 15:30</div>
+        <div class="tl-time">11:15 ~ 11:40 · 체류 20~25분</div>
+        <div class="tl-card">
+          <div class="tl-card-header">
+            <div class="tl-icon">🌳</div>
+            <div class="tl-title">② 패치워크 로드 (켄메리·세븐스타 나무)</div>
+            <span class="tl-badge badge-tour">관광</span>
+          </div>
+          <div class="tl-desc">광고로 유명해진 '켄과 메리의 나무', '세븐스타 나무' 등 언덕 위 나무들. 비에이 특유의 조각보 같은 밭 풍경.</div>
+          <div class="transport-inline">
+            <div class="t-row"><strong>안내:</strong> 당일 상황에 따라 <strong>차창 관광</strong>으로 대체될 수 있음 (하차 없이 버스에서 감상)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">12:00 ~ 13:15 · 점심 60~75분</div>
+        <div class="tl-card" style="border-color: var(--accent);">
+          <div class="tl-card-header">
+            <div class="tl-icon">🍱</div>
+            <div class="tl-title">③ 비에이역 점심 — 준페이 (じゅんぺい)</div>
+            <span class="tl-badge badge-food">점심</span>
+          </div>
+          <div class="tl-desc">투어에 <strong>준페이 좌석이 자동 확약(100% 좌석 확보)</strong>되어 대기 없이 식사. 해산물을 피한다면 <strong>가츠동·돈카츠 정식</strong>을 주문하면 든든해요. (준페이는 새우튀김으로 유명하지만 가츠 메뉴도 인기)</div>
+          <div class="transport-inline">
+            <div class="t-row"><strong>위치:</strong> 비에이역 부근 / 식대는 자유식(투어비 별도, 1인 1,000~1,500엔 내외)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">13:30 ~ 14:10 · 체류 30~40분 🌟</div>
+        <div class="tl-card" style="border-color: var(--accent);">
+          <div class="tl-card-header">
+            <div class="tl-icon">💙</div>
+            <div class="tl-title">④ 청의 호수 (아오이이케)</div>
+            <span class="tl-badge badge-tour">하이라이트</span>
+          </div>
+          <div class="tl-desc">신비로운 코발트블루 호수. 자작나무가 물에 잠긴 비현실적 풍경으로 이 투어의 하이라이트! 8월엔 진한 초록 숲과 파란 물의 대비가 극적이에요.</div>
+          <div class="transport-inline">
+            <div class="t-row"><strong>입장료:</strong> 무료 / 주차장에서 도보 이동</div>
+            <div class="t-row"><strong>체류:</strong> 8월(7/1~) 기준 30~40분 — 짧으니 도착 즉시 포토스팟으로!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">14:15 ~ 14:40 · 체류 15~25분</div>
+        <div class="tl-card">
+          <div class="tl-card-header">
+            <div class="tl-icon">💧</div>
+            <div class="tl-title">⑤ 흰 수염 폭포 (시라히게 폭포)</div>
+            <span class="tl-badge badge-tour">관광</span>
+          </div>
+          <div class="tl-desc">절벽 사이로 수염처럼 흘러내리는 폭포. 청의 호수의 푸른 물빛이 시작되는 원천. 시라히게 다리에서 에메랄드빛 강과 함께 감상.</div>
+          <div class="transport-inline">
+            <div class="t-row"><strong>입장료:</strong> 무료 / 청의 호수와 가까워 묶어서 관람</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">15:30 ~ 16:30 · 체류 50~60분</div>
         <div class="tl-card">
           <div class="tl-card-header">
             <div class="tl-icon">💜</div>
-            <div class="tl-title">후라노 — 팜 토미타 (Farm Tomita)</div>
+            <div class="tl-title">⑥ 후라노 — 팜 토미타 (Farm Tomita)</div>
             <span class="tl-badge badge-tour">관광</span>
           </div>
-          <div class="tl-desc">홋카이도 라벤더의 성지. 8월은 절정 지났지만 다양한 품종 라벤더 + 이로도리 들판(무지개색 꽃밭)은 여전히 장관. 라벤더 아이스크림 필수!</div>
+          <div class="tl-desc">홋카이도 라벤더의 성지. 8월은 라벤더 절정은 지났지만 '이로도리 들판'이 양귀비·코스모스·달리아로 무지개처럼 가득. 라벤더 아이스크림 필수!</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>8월 상황:</strong> 라벤더 일부 수확 완료이지만, '이로도리 들판'은 양귀비·코스모스·달리아로 가득</div>
-            <div class="t-row"><strong>쇼핑:</strong> 라벤더 향수, 꿀, 잼 등 기념품 구매 최적</div>
+            <div class="t-row"><strong>입장료:</strong> 무료 / 체류 8월(7/1~) 기준 50~60분</div>
+            <div class="t-row"><strong>쇼핑:</strong> 라벤더 향수·꿀·잼 등 기념품 구매 최적</div>
           </div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">15:30 ~ 16:30</div>
-        <div class="tl-card">
-          <div class="tl-card-header">
-            <div class="tl-icon">🍷</div>
-            <div class="tl-title">후라노 와인 공장 또는 닝글 테라스</div>
-            <span class="tl-badge badge-tour">관광</span>
-          </div>
-          <div class="tl-desc">투어 일정에 따라 포함 여부 상이. 닝글 테라스는 숲속 공방마을 — 커플 산책 명소.</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-time">19:00 ~ 20:00</div>
+        <div class="tl-time">~ 18:50 (휴게소 1회 경유)</div>
         <div class="tl-card">
           <div class="tl-card-header">
             <div class="tl-icon">🚌</div>
-            <div class="tl-title">삿포로 귀환</div>
+            <div class="tl-title">삿포로 귀환 — 18:50~19:00 종료</div>
             <span class="tl-badge badge-move">이동</span>
           </div>
-          <div class="tl-desc">투어 버스로 삿포로역 귀환 (약 2시간 소요). 피곤하겠지만 저녁 식사로 마무리!</div>
+          <div class="tl-desc">팜 토미타 → 삿포로 약 2시간(이와미자와 휴게소 1회 정차). <strong>삿포로역 또는 스스키노에서 선택 하차</strong> — 저녁 먹을 스스키노에서 내리면 편해요!</div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">20:00 ~ 21:30</div>
+        <div class="tl-time">19:15 ~ 20:45</div>
         <div class="tl-card">
           <div class="tl-card-header">
-            <div class="tl-icon">🍲</div>
-            <div class="tl-title">저녁 — 징기스칸 시로쿠마 OR 스미레 라멘</div>
-            <span class="tl-badge badge-food">선택 맛집</span>
+            <div class="tl-icon">🍛</div>
+            <div class="tl-title">저녁 — 스프카레 킹 (SOUP CURRY KING) 센트럴점</div>
+            <span class="tl-badge badge-food">맛집</span>
           </div>
-          <div class="tl-desc">투어 귀환 후 기호에 따른 든든한 저녁 식사 선택!
-            <br>• <strong>옵션 A (징기스칸 시로쿠마):</strong> 미슐랭 빕구르망 수록 및 타베로그 백명점. 홋카이도산 최고급 프리미엄 생양고기 직영 전문점 (한국어 메뉴판 있음).
-            <br>• <strong>옵션 B (스미레 라멘):</strong> 삿포로 미소 라멘의 전설. 깊은 풍미의 된장 육수와 알싸한 생강의 환상 조화 (영어 메뉴 있음).</div>
+          <div class="tl-desc">투어 복귀 후 홋카이도 소울푸드로 마무리. 삿포로 스프카레 인기점 <strong>스프카레 킹</strong>의 시내 지점으로, <strong>닭뼈·겐코츠 육수 + 일본식 가다랑어 다시</strong>를 합친 더블 스프가 특징이에요. 카레 특유의 향신료 맛보다 <strong>감칠맛·국물 맛이 앞서는 스타일</strong>이라 카레를 즐기지 않는 입맛에도 부담이 적습니다. 맵기·밥 양 조절 가능.</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>시로쿠마:</strong> 스스키노역 도보 3분 / 1인 3,000~5,000엔 / 홋카이도산 국내산 생양고기 맛보기</div>
-            <div class="t-row"><strong>스미레:</strong> 스스키노역 도보 1분 / 1인 1,000~1,500엔 / 밤 12시반까지 영업</div>
+            <div class="t-row"><strong>위치:</strong> 中央区 南2조西3-13-4 카타오카 빌딩 <strong>B1</strong> / 스스키노역 도보 3분 · 오도리역 도보 4분 (타누키코지 아케이드 안 — Day 1 돈키호테 별관 바로 옆 블록)</div>
+            <div class="t-row"><strong>영업:</strong> 평일 11:30~15:30 / 17:30~21:30 (8/4는 화요일) · 주말·공휴일 11:30~21:30</div>
+            <div class="t-row"><strong>가격:</strong> 1인 1,300~1,900엔 (약 12,350원 ~ 18,050원) / 도산 포크 카쿠니 카레 1,650엔 (약 15,700원)</div>
+            <div class="t-row"><strong>⚠️ Tip:</strong> 투어 버스는 <strong>스스키노 하차</strong>를 선택하면 도보 3분. 마감이 21:30이라 라스트오더 시간을 감안해 늦어도 20:30까지는 입장하세요</div>
           </div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">21:30 ~</div>
+        <div class="tl-time">21:00 ~ 22:00 🛍 쇼핑 찬스</div>
+        <div class="tl-card" style="border-color: var(--accent2);">
+          <div class="tl-card-header">
+            <div class="tl-icon">🛒</div>
+            <div class="tl-title">MEGA 돈키호테 타누키코지 본점 (24시간)</div>
+            <span class="tl-badge badge-shop">마트/쇼핑</span>
+          </div>
+          <div class="tl-desc">투어로 지친 날이지만 <strong>24시간 영업이라 시간 압박 0</strong>. 화장품·간식·생필품·기념품 면세 쇼핑을 <strong>여기서 한 번에 몰아서</strong> 처리하면 3·4일차가 여유로워져요. 저녁 먹은 스스키노에서 도보 4분.</div>
+          <div class="transport-inline">
+            <div class="t-row"><strong>위치:</strong> 타누키코지 3~4초메 / 스스키노역 도보 4분 · 타누키코지 트램역 1분</div>
+            <div class="t-row"><strong>면세:</strong> 한 매장 5,500엔(약 52,000원) 이상 결제 시 면세 (여권 필수) — 면세 카운터 야간엔 한산</div>
+            <div class="t-row"><strong>호텔 복귀:</strong> 난보쿠선 1정거장 또는 도보 약 12분 (짐 무거우면 택시도 가까워 부담 적음)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">22:10 ~</div>
         <div class="tl-card">
           <div class="tl-card-header">
             <div class="tl-icon">🏨</div>
@@ -1061,11 +1273,19 @@
       <div class="day-num">03</div>
       <div class="day-header-info">
         <h3>삿포로 시내 완전 탐방</h3>
-        <p>8월 5일 (수) · 시로이 코이비토 → 돈카츠 → 맥주박물관 → 와규 야키니쿠</p>
+        <p>8월 5일 (수) · 오전 파르코 쇼핑 → 돈카츠 → 맥주 축제 → 와규 야키니쿠 → 모이와산 야경</p>
         <span style="display:inline-block;margin-top:6px;font-size:0.75rem;padding:3px 10px;background:rgba(255,183,197,0.15);border:1px solid rgba(255,183,197,0.3);border-radius:4px;color:var(--primary-light);">
-          💡 <strong>식사 팁:</strong> 아침은 호텔 조식. 점심은 서울에서 맛보기 힘든 두툼한 프리미엄 돈카츠 아오키(SPF 돈카츠), 디저트로 홋카이도 유제품 파르페를 즐기고, 저녁에는 프라이빗한 룸에서 최고급 와규 야키니쿠를 즐기는 완벽한 미식 데이입니다.
+          💡 <strong>식사 팁:</strong> 아침은 호텔 조식. 점심은 서울에서 맛보기 힘든 두툼한 프리미엄 돈카츠 아오키(SPF 돈카츠), 디저트로 홋카이도 유제품 파르페를 즐기고, 저녁에는 와규 야키니쿠를 일찍 즐긴 뒤 어두워지면 모이와산 야경으로 마무리하는 동선입니다.
         </span>
       </div>
+    </div>
+
+    <div class="day-map-wrap reveal">
+      <div class="day-map-head">🗺️ Day 3 동선 — 오도리(파르코·점심·맥주축제) → 타누키코지 → 스스키노(야키니쿠) → 모이와산 야경
+        <span class="map-legend"><span><i style="background:var(--primary)"></i>방문지</span><span><i style="background:var(--accent2)"></i>이동 동선</span></span>
+      </div>
+      <div class="day-map" id="map-day2"></div>
+      <div style="padding:10px 18px;font-size:0.75rem;color:var(--text-muted);border-top:1px solid var(--card-border);">📍 모이와산 로프웨이 셔틀이 <strong>스스키노 트램에서 출발</strong>해서, 스스키노 저녁 → 야경이 한 동선에 묶여요. 8월 일몰이 약 19시라 야키니쿠를 17:30에 시작해 야경 골든타임을 맞췄습니다.</div>
     </div>
     <div class="timeline">
 
@@ -1084,20 +1304,18 @@
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">10:00 ~ 12:30</div>
-        <div class="tl-card">
+        <div class="tl-time">10:00 ~ 12:00</div>
+        <div class="tl-card" style="border-color: var(--accent2);">
           <div class="tl-card-header">
-            <div class="tl-icon">🍪</div>
-            <div class="tl-title">시로이 코이비토 파크 (여유롭게 2.5시간)</div>
-            <span class="tl-badge badge-tour">관광</span>
+            <div class="tl-icon">🛍️</div>
+            <div class="tl-title">오전 쇼핑 — 삿포로 파르코 & 백화점 (오도리~스스키노)</div>
+            <span class="tl-badge badge-shop">쇼핑</span>
           </div>
-          <div class="tl-desc">홋카이도 대표 과자 '시로이 코이비토' 공장 테마파크. 영국풍 정원 + 카페 + 과자 체험. 기념품 쇼핑 최적지!</div>
+          <div class="tl-desc">오늘은 시내 쇼핑 데이! 조식 후 느긋하게 출발해 오도리~스스키노 방면 쇼핑몰을 공략. 메인은 <strong>삿포로 파르코</strong> — 2030 여성 패션·코스메가 가장 강한 몰이에요.</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>루트:</strong> 오도리역 → 도자이선(🔴) 미야노사와 방면 탑승</div>
-            <div class="t-row"><strong>정거장:</strong> 오도리역에서 6정거장 → 미야노사와역(종점) 하차 / 약 12분</div>
-            <div class="t-row"><strong>도보:</strong> 미야노사와역 2번 출구 → 도보 7분</div>
-            <div class="t-row"><strong>요금:</strong> 지하철 280엔 / 공원 입장 800엔 / 영업 10:00~18:00</div>
-            <div class="t-row"><strong>Tip:</strong> 오전에 가면 한산해서 여유롭게 카페·과자 체험 가능!</div>
+            <div class="t-row"><strong>🛍️ 삿포로 파르코(PARCO):</strong> 오도리 4초메(오도리~스스키노 방면), 10:00~20:00 / 면세 카운터 / 꼼데가르송·빔즈·오니츠카 타이거 등</div>
+            <div class="t-row"><strong>🏬 백화점:</strong> 미츠코시·마루이이마이 지하 식품관에서 디저트 구경 (도보 1~3분)</div>
+            <div class="t-row"><strong>🚶 루트:</strong> 호텔 → 치카호 직결로 오도리역 도보 5분 (비 안 맞음) → 전부 도보권</div>
           </div>
         </div>
       </div>
@@ -1113,7 +1331,7 @@
           </div>
           <div class="tl-desc">도쿄의 대표적인 돈카츠 백명점(百名店) 삿포로 지점. 히말라야 핑크 소금과 특제 암염에 찍어 먹는 선홍빛 프리미엄 SPF 돼지고기 돈카츠. 한국에서는 맛보기 힘든 최상급 육즙과 압도적 두께를 현지 합리적인 가격에 가성비 있게 즐길 수 있습니다. (한국어 메뉴판 완비)</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> 오도리역/스스키노역 인근 (도보 5분) / 1인 1,500~2,500엔</div>
+            <div class="t-row"><strong>위치:</strong> 오도리역/스스키노역 인근 (도보 5분) / 1인 1,500~2,500엔 (약 14,250원 ~ 23,750원)</div>
             <div class="t-row"><strong>Tip:</strong> 등심(로스)카츠 정식이 간판 메뉴. 소금에 찍어 본연의 맛을 본 뒤, 와사비를 올려 드세요.</div>
           </div>
         </div>
@@ -1121,60 +1339,61 @@
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">14:00 ~ 16:00</div>
+        <div class="tl-time">13:30 ~ 15:00</div>
         <div class="tl-card">
+          <div class="tl-card-header">
+            <div class="tl-icon">🛍️</div>
+            <div class="tl-title">오도리 브랜드 쇼핑 & 감성 카페 휴식</div>
+            <span class="tl-badge badge-shop">쇼핑/카페</span>
+          </div>
+          <div class="tl-desc">점심 후엔 잠시 쉬어가기. 오전에 못 본 오도리 매장을 마저 둘러보고, 홋카이도산 프리미엄 우유로 라떼를 말아주는 감성 카페에서 커피 한 잔의 휴식 → 바로 옆 맥주축제장으로 자연스럽게 연결돼요.</div>
+          <div class="transport-inline">
+            <div class="t-row"><strong>🛍️ 추가 쇼핑:</strong> 오전 파르코에서 못 본 매장이나 4초메 플라자·노르베사 등 가볍게 (무리하지 말고 카페 휴식 위주)</div>
+            <div class="t-row"><strong>☕ 추천 카페:</strong> 바리스타트 커피(Baristart Coffee) — 홋카이도산 품종별 우유 선택 인생 라떼 [1잔 약 600~750엔 (약 5,700~7,100원)]</div>
+            <div class="t-row"><strong>🚶 이동:</strong> 식당·쇼핑몰·카페·맥주축제장이 전부 도보 3~5분 — 되돌아감 없이 한 동선</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">15:00 ~ 16:30 🌟 골든타임</div>
+        <div class="tl-card" style="border-color: var(--accent);">
           <div class="tl-card-header">
             <div class="tl-icon">🍺</div>
-            <div class="tl-title">삿포로 맥주박물관</div>
-            <span class="tl-badge badge-tour">관광</span>
+            <div class="tl-title">삿포로 맥주 축제 (오도리 비어가든)</div>
+            <span class="tl-badge badge-tour">축제</span>
           </div>
-          <div class="tl-desc">1876년 창업 삿포로 맥주의 역사. 붉은 벽돌 건물 견학 + 1층 '스타 홀'에서 생맥주 시음. 맥주 3종 비교 세트 추천!</div>
+          <div class="tl-desc">여름 홋카이도의 하이라이트! 오도리 공원 전체(5~11초메)가 거대한 야외 비어가든으로 변신합니다. 시원한 여름 바람을 맞으며 삿포로 클래식 생맥주와 다양한 안주를 즐겨보세요!</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>루트 (버스):</strong> 미야노사와 → 오도리역 → 도자이선(🔴) → 大通역 하차 → 삿포로역 앞 버스 정류장 → 88번 Loop 버스 → 'サッポロビール園' 하차</div>
-            <div class="t-row"><strong>또는:</strong> 도호선(🔵) 히가시쿠야쿠쇼마에역(東区役所前) 도보 13분</div>
-            <div class="t-row"><strong>영업:</strong> 11:00~18:00 (수요일 영업 ✅) / 2026.7월부터 입장 유료</div>
-            <div class="t-row"><strong>⚠️</strong> 시음 시 여권 지참 필수 / 가이드 투어 1,000엔 (예약 권장)</div>
+            <div class="t-row"><strong>⏰ 추천 방문 시간:</strong> <strong>오후 3시 ~ 4시 사이</strong> (직장인들이 퇴근하고 몰리기 전이라, 햇빛을 피할 수 있는 좋은 천막 좌석을 비교적 여유롭게 선점할 수 있습니다.)</div>
+            <div class="t-row"><strong>🎫 오모테나시 시트 (예약석):</strong> 외국인 관광객 등의 편의를 위해 온라인으로 사전 예약할 수 있는 유료 지정석 제도가 있습니다. 저녁 골든타임 방문 시 현장 대기 없이 바로 앉아 맥주/안주 세트를 편하게 즐길 수 있습니다.</div>
+            <div class="t-row"><strong>📍 위치:</strong> 오도리 공원 (5초메: 산토리, 6초메: 아사히, 7초메: 기린, 8초메: 삿포로 맥주 등 구역별 브랜드 상이)</div>
+            <div class="t-row"><strong>💡 주문:</strong> 티켓 판매 부스에서 메뉴표를 구매 후 음식과 교환하는 방식 / 현금 및 카드 결제 가능</div>
           </div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">16:00 ~ 17:30</div>
+        <div class="tl-time">16:30 ~ 17:30</div>
         <div class="tl-card">
           <div class="tl-card-header">
-            <div class="tl-icon">🛍</div>
-            <div class="tl-title">삿포로 팩토리 (쇼핑)</div>
+            <div class="tl-icon">🛍️</div>
+            <div class="tl-title">타누키코지 상점가 쇼핑</div>
             <span class="tl-badge badge-shop">쇼핑</span>
           </div>
-          <div class="tl-desc">맥주박물관 바로 옆! 옛 삿포로 맥주 공장을 개조한 쇼핑몰. 아름다운 유리 아트리움. 노스페이스 등 아웃도어 브랜드 + 기념품샵.</div>
+          <div class="tl-desc">150년 역사를 지닌 삿포로 최대의 지붕 덮인 아케이드 상점가입니다. 비가 오거나 해가 지더라도 쾌적하게 쇼핑할 수 있습니다. 면세 혜택이 적용되는 메가 돈키호테 4초메점에서 의약품, 화장품, 기념품 쇼핑을 즐깁니다.</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> 삿포로 맥주박물관 도보 2분 (같은 'サッポロガーデンパーク' 내)</div>
-            <div class="t-row"><strong>귀환:</strong> 삿포로 팩토리 → 버스 88번 역방향 → 삿포로역 / 또는 도보 15분 → 지하철 도호선 이용</div>
+            <div class="t-row"><strong>📍 위치:</strong> 오도리 공원에서 남쪽으로 도보 5분 거리 / 삿포로 그랜드 호텔에서 도보 8분</div>
+            <div class="t-row"><strong>🛍️ 쇼핑 팁:</strong> 5,000엔 (약 47,500원) 이상 구매 시 면세 혜택 적용 가능 (여권 필수 지참!) / 메가 돈키호테는 24시간 영업</div>
           </div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">17:30 ~ 18:30</div>
-        <div class="tl-card">
-          <div class="tl-card-header">
-            <div class="tl-icon">🛍</div>
-            <div class="tl-title">타누키코지 상점가</div>
-            <span class="tl-badge badge-shop">쇼핑</span>
-          </div>
-          <div class="tl-desc">호텔 바로 옆 150년 역사의 아케이드 상점가. 비·눈 영향 없음. 4초메 메가 돈키호테(약품·화장품·기념품). 여권 면세 쇼핑!</div>
-          <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> 그란벨 호텔 도보 1분</div>
-            <div class="t-row"><strong>Tip:</strong> 돈키호테 4초메는 24시간 영업 — 밤에도 가능</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-time">19:00 ~ 21:00</div>
+        <div class="tl-time">17:30 ~ 19:00</div>
         <div class="tl-card" style="border-color: var(--accent);">
           <div class="tl-card-header">
             <div class="tl-icon">🥩</div>
@@ -1183,38 +1402,40 @@
           </div>
           <div class="tl-desc">프라이빗한 아늑한 개별 룸(개실)에서 즐기는 최고급 A5 등급 흑모와규 야키니쿠. 한국의 고급 한우 오마카세에서는 1인 20~30만 원을 호가하는 마블링 예술인 부위들을 현지의 매우 착한 가격에 즐길 수 있습니다. (한국어 메뉴판 완비, 룸 완비)</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> 스스키노역 도보 3분 / 1인 5,000~8,000엔</div>
-            <div class="t-row"><strong>Tip:</strong> 프라이빗 룸으로 되어 있으니 가급적 사전 예약 권장. 와규 모둠(츠바메 세트)과 꽃등심, 규탄(우설) 강력 추천!</div>
+            <div class="t-row"><strong>위치:</strong> 스스키노역 도보 3분 / 1인 5,000~8,000엔 (약 47,500원 ~ 76,000원)</div>
+            <div class="t-row"><strong>⏰ 시간 전략:</strong> 모이와산 야경 골든타임(일몰 19시 직후)을 잡으려면 17:30 입장 추천. 사전 예약 권장 — 와규 모둠(츠바메 세트)·꽃등심·규탄(우설) 강력 추천!</div>
           </div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">21:00 ~ 22:00</div>
-        <div class="tl-card">
+        <div class="tl-time">19:30 ~ 21:30 🌟 강력 추천 야경</div>
+        <div class="tl-card" style="border-color: var(--accent);">
           <div class="tl-card-header">
-            <div class="tl-icon">🎡</div>
-            <div class="tl-title">코코노 스스키노 + 스스키노 야경</div>
+            <div class="tl-icon">🚠</div>
+            <div class="tl-title">모이와산 로프웨이 (신3대 야경)</div>
             <span class="tl-badge badge-tour">야경</span>
           </div>
-          <div class="tl-desc">2023년 오픈 신규 복합몰. 닛카 위스키 네온사인 포토스팟. 스스키노 특유의 네온 야경 산책.</div>
+          <div class="tl-desc">일본 신(新) 3대 야경으로 선정된 삿포로 시내의 황홀한 360도 야경을 감상합니다. 산 정상 전망대에는 연인들을 위한 '사랑의 종'과 약속의 자물쇠가 설치되어 있어 커플 여행의 낭만을 극대화해 줍니다. <strong>스스키노 저녁 식사 직후 트램으로 바로 연결</strong>되는 최적 동선!</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> 스스키노역 5번 출구 직결</div>
+            <div class="t-row"><strong>🎫 왕복 요금 (로프웨이+미니 케이블카):</strong> 성인 1인 <strong>2,100엔 (약 20,000원)</strong></div>
+            <div class="t-row"><strong>🚃 가는 법 (트램):</strong> 스스키노역에서 노면전차(트램) 탑승 (요금 1회 230엔 / 약 2,200원) → '로프웨이 이리구치'역 하차 → 무료 셔틀버스 → 로프웨이 승강장</div>
+            <div class="t-row"><strong>⏱ 운영 시간:</strong> 하절기 10:30 ~ 22:00 (마지막 탑승 21:30) — 8월 일몰 직후(19:30~) 방문이 야경 황금시간</div>
           </div>
         </div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-time">22:00 ~</div>
+        <div class="tl-time">21:45 ~</div>
         <div class="tl-card">
           <div class="tl-card-header">
             <div class="tl-icon">☕</div>
             <div class="tl-title">시메 파르페 — 파르페, 커피, 술, 사토</div>
             <span class="tl-badge badge-food">디저트</span>
           </div>
-          <div class="tl-desc">삿포로 '시메 파르페' 문화의 원조. 술 한 잔 + 예쁜 파르페로 여행 3일차 마무리!</div>
+          <div class="tl-desc">삿포로 '시메 파르페' 문화의 원조. 술 한 잔 + 예쁜 파르페로 여행 3일차 마무리! 1인 1,500~2,500엔 (약 14,250원 ~ 23,750원).</div>
           <div class="transport-inline">
             <div class="t-row"><strong>위치:</strong> 오도리역 근처 / 스스키노에서 도보 5분</div>
           </div>
@@ -1229,9 +1450,19 @@
     <div class="day-header">
       <div class="day-num">04</div>
       <div class="day-header-info">
-        <h3>마지막 날 — 쇼핑 & 귀국</h3>
+        <h3>마지막 날 — 조식 · 가벼운 쇼핑 & 귀국</h3>
         <p>8월 6일 (목) · 15:05 출발, 12:00 전 공항 도착 목표</p>
+        <span style="display:inline-block;margin-top:6px;font-size:0.75rem;padding:3px 10px;background:rgba(255,183,197,0.15);border:1px solid rgba(255,183,197,0.3);border-radius:4px;color:var(--primary-light);">
+          💡 <strong>컨셉:</strong> 조식 후 느긋하게 쉬다가, 사실상 <strong>10:50 JR을 타러 바로 나가야 하는 날</strong>이에요. 무리한 일정 대신 삿포로역 막판 쇼핑만 가볍게.
+        </span>
       </div>
+    </div>
+
+    <div class="day-map-wrap reveal">
+      <div class="day-map-head">🗺️ Day 4 동선 — 호텔 → 삿포로역(막판 쇼핑) → JR 쾌속 에어포트 → 신치토세 공항
+        <span class="map-legend"><span><i style="background:var(--primary)"></i>방문지</span><span><i style="background:var(--accent2)"></i>이동 동선</span></span>
+      </div>
+      <div class="day-map" id="map-day3"></div>
     </div>
     <div class="timeline">
 
@@ -1270,10 +1501,11 @@
             <div class="tl-title">삿포로역 — 스텔라 플레이스 + 다이마루</div>
             <span class="tl-badge badge-shop">쇼핑</span>
           </div>
-          <div class="tl-desc">삿포로 최대 쇼핑몰. 다이마루 지하 식품관에서 마지막 홋카이도 기념품 구매. 롯카테이 과자, 마루세이 버터샌드, 한정 푸딩 등.</div>
+          <div class="tl-desc">마지막 날 = <strong>선물·디저트 본구매 타이밍</strong>! 다이마루 지하 식품관(데파치카)에서 롯카테이·기타카로·마루세이 버터샌드·한정 푸딩을 한 번에. 백화점 브랜드 매장은 다수가 10:00 오픈이라 09:30 도착 시 일부만 가능하니 살 품목을 미리 리스트업.</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>루트:</strong> 오도리역 → 난보쿠선(🟢) → さっぽろ역(삿포로역) — 1정거장, 2분</div>
-            <div class="t-row"><strong>요금:</strong> 210엔 / JR 삿포로역과 직결</div>
+            <div class="t-row"><strong>루트:</strong> 호텔 → 치카호 직결 → 삿포로역/다이마루 (도보 5~8분, 비 안 맞음)</div>
+            <div class="t-row"><strong>🛍 우선순위:</strong> ① 다이마루 지하 디저트·선물 → ② (시간 남으면) 스텔라플레이스에서 Day1에 찜한 패션 아이템 회수</div>
+            <div class="t-row"><strong>💡 팁:</strong> 부피 큰 일반 과자·기념품은 <strong>신치토세공항</strong>에서 사도 충분 → 시내 막판은 백화점 한정품·디저트에 집중해 가볍게</div>
           </div>
         </div>
       </div>
@@ -1290,8 +1522,8 @@
           <div class="tl-desc">이 열차를 놓치면 공항에 12시 전 도착이 어렵습니다! 반드시 10:50까지 탑승.</div>
           <div class="transport-inline">
             <div class="t-row"><strong>탑승:</strong> JR 삿포로역 플랫폼 → 쾌속 에어포트 (신치토세 방면)</div>
-            <div class="t-row"><strong>요금:</strong> 1,150엔 (Kitaca 자동 차감)</div>
-            <div class="t-row"><strong>지정석:</strong> 사전에 자동발매기에서 uシート 예약 추천 (840엔 추가)</div>
+            <div class="t-row"><strong>요금:</strong> 1,150엔 (약 10,900원, Kitaca 자동 차감)</div>
+            <div class="t-row"><strong>지정석:</strong> 사전에 자동발매기에서 uシート 예약 추천 (840엔 / 약 8,000원 추가)</div>
             <div class="t-row"><strong>소요:</strong> 약 37분 → 11:30 전후 신치토세공항역 도착</div>
           </div>
         </div>
@@ -1308,7 +1540,7 @@
           </div>
           <div class="tl-desc">공항역 유인창구에서 Kitaca 카드 환불 (잔액 + 보증금 500엔 돌려받기)</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>Kitaca 환불:</strong> 신치토세공항역 유인창구 / 잔액 + 보증금 500엔 반환</div>
+            <div class="t-row"><strong>Kitaca 환불:</strong> 신치토세공항역 유인창구 / 잔액 + 보증금 500엔 (약 4,750원) 반환</div>
             <div class="t-row"><strong>이후:</strong> 국제선 탑승수속 (출발 2시간 전 = 13:05까지)</div>
           </div>
         </div>
@@ -1319,14 +1551,14 @@
         <div class="tl-time">12:00 ~ 13:30</div>
         <div class="tl-card">
           <div class="tl-card-header">
-            <div class="tl-icon">🍜</div>
-            <div class="tl-title">공항 '신치토세 라멘 도장' — 마지막 홋카이도 라멘!</div>
-            <span class="tl-badge badge-food">맛집</span>
+            <div class="tl-icon">🍱</div>
+            <div class="tl-title">공항에서 간단히 점심 + 기념품 마무리</div>
+            <span class="tl-badge badge-food">간단 식사</span>
           </div>
-          <div class="tl-desc">공항 내 유명 라멘 전문점 모음. 삿포로 미소 라멘으로 홋카이도 여행의 마지막 식사를 완성!</div>
+          <div class="tl-desc">아침에 호텔 조식을 든든히 먹고 나왔으니 마지막 점심은 <strong>공항에서 가볍게</strong>. 신치토세공항 3층 식당가·푸드코트에서 덮밥·소바·샌드위치 등 부담 없는 걸로 때우고, 남은 시간은 기념품 매장에 씁니다.</div>
           <div class="transport-inline">
-            <div class="t-row"><strong>위치:</strong> 신치토세공항 국내선 터미널 3층</div>
-            <div class="t-row"><strong>Tip:</strong> 12시~13시는 붐빔 — 일찍 가거나 탑승수속 후 보안검색대 안쪽 식당 이용 가능</div>
+            <div class="t-row"><strong>위치:</strong> 신치토세공항 국내선 터미널 3층 식당가 / 2층 '스위츠 알레(롯카테이·기타카로 등)'에서 기념품 동시 해결</div>
+            <div class="t-row"><strong>Tip:</strong> 12시~13시는 붐빔 — 일찍 가거나, 탑승수속 후 국제선 보안검색대 안쪽 식당·카페 이용도 가능</div>
           </div>
         </div>
       </div>
@@ -1376,7 +1608,7 @@
       <div class="food-name">야키니쿠 츠바메 (個室焼肉つばめ)</div>
       <div class="food-meta">
         <span class="food-tag">스스키노역 도보 3분</span>
-        <span class="food-tag">1인 5,000~8,000엔</span>
+        <span class="food-tag">1인 5,000~8,000엔 (약 47,500원 ~ 76,000원)</span>
         <span class="food-tag">한국어 메뉴판 완비</span>
       </div>
       <div class="food-desc">프라이빗 개별 룸에서 입안에서 살살 녹는 A5 최고급 흑모와규를 구워 먹을 수 있습니다. 서울의 하이엔드 한우 다이닝 대비 절반 수준의 가격으로 호사를 누릴 수 있는 곳입니다. (온라인 예약 지원, 한국어 대응)</div>
@@ -1387,32 +1619,32 @@
       <div class="food-name">돈카츠 아오키 (とんかつ 檍)</div>
       <div class="food-meta">
         <span class="food-tag">스스키노/오도리역 도보 5분</span>
-        <span class="food-tag">1인 1,500~2,500엔</span>
+        <span class="food-tag">1인 1,500~2,500엔 (약 14,250원 ~ 23,750원)</span>
         <span class="food-tag">한국어 메뉴판 완비</span>
       </div>
       <div class="food-desc">도쿄 최고의 돈카츠 맛집인 백명점(百名店)의 삿포로 분점. 철저히 관리되어 미디움 레어로도 즐기는 명품 SPF 돼지고기를 사용합니다. 암염 소금에 찍어 본연의 감칠맛을 느끼면 신세계를 경험하게 됩니다.</div>
     </div>
 
     <div class="food-card">
-      <div class="food-category">🐑 징기스칸 (미슐랭 / 타베로그 백명점)</div>
-      <div class="food-name">징기스칸 시로쿠마 (しらくま)</div>
+      <div class="food-category">🐑 징기스칸 · <strong>Day 1 저녁 확정</strong></div>
+      <div class="food-name">아사히카와 징기스칸 다이코쿠야 삿포로 1호점</div>
       <div class="food-meta">
-        <span class="food-tag">스스키노역 도보 3분</span>
-        <span class="food-tag">1인 3,000~5,000엔</span>
-        <span class="food-tag">다국어 메뉴판 있음</span>
+        <span class="food-tag">호스이스스키노역 도보 1분</span>
+        <span class="food-tag">1인 5,000~6,000엔 (약 47,500원 ~ 57,000원)</span>
+        <span class="food-tag">예약 권장 · 90분제</span>
       </div>
-      <div class="food-desc">미슐랭 가이드에 등재된 양고기 맛집. 호주산 수입램뿐 아니라 구하기 매우 힘든 홋카이도 국내산 생양고기(서포크 품종)를 서빙합니다. 잡내가 전혀 없고 쫄깃함과 부드러움이 일품입니다.</div>
+      <div class="food-desc">2002년 아사히카와에서 창업해 줄서는 집으로 유명해진 징기스칸 노포(旭川成吉思汗 大黒屋)의 삿포로 1호점. 숯불 화로에 생양고기를 얹어 겉만 빠르게 익혀 육즙을 가두는 방식이라, 잡내 없이 부드러운 생램을 맛볼 수 있습니다. 다이코쿠 세트(4종 모둠) 2,860엔. 南4조西2 빌딩 2층 / 월~금 17:00~23:30 · 주말 16:00~ / 예약 011-211-1429</div>
     </div>
 
     <div class="food-card">
-      <div class="food-category">🐑 징기스칸 (삿포로의 전설)</div>
-      <div class="food-name">징기스칸 다루마 (だるま)</div>
+      <div class="food-category">🍛 스프 카레 · <strong>Day 2 저녁 확정</strong></div>
+      <div class="food-name">스프카레 킹 (SOUP CURRY KING) 센트럴점</div>
       <div class="food-meta">
         <span class="food-tag">스스키노역 도보 3분</span>
-        <span class="food-tag">1인 3,000~6,000엔</span>
-        <span class="food-tag">한국어 태블릿 가능</span>
+        <span class="food-tag">1,300~1,900엔 (약 12,350원 ~ 18,050원)</span>
+        <span class="food-tag">맵기·밥 양 조절</span>
       </div>
-      <div class="food-desc">삿포로 징기스칸 하면 가장 먼저 꼽히는 대장 맛집. 화로에 신선한 양고기와 대파, 양파를 얹어 참숯에 굽는 방식으로 특제 간장 소스 맛이 환상적입니다. 본점 외에 스스키노 내에 여러 지점이 있습니다. (현장 웨이팅)</div>
+      <div class="food-desc">닭뼈·겐코츠로 뽑은 진한 육수에 일본식 가다랑어 다시를 더한 더블 스프가 간판. 향신료 향이 앞서는 스타일이 아니라 <strong>국물 감칠맛이 중심</strong>이라, 카레를 즐기지 않는 입맛에도 진입 장벽이 낮습니다. 南2조西3 카타오카 빌딩 B1 / 평일 11:30~15:30 · 17:30~21:30</div>
     </div>
 
     <div class="food-card">
@@ -1420,7 +1652,7 @@
       <div class="food-name">스아게 플러스 (Suage+)</div>
       <div class="food-meta">
         <span class="food-tag">스스키노역 도보 2분</span>
-        <span class="food-tag">1,300~1,800엔</span>
+        <span class="food-tag">1,300~1,800엔 (약 12,350원 ~ 17,100원)</span>
         <span class="food-tag">한국어 메뉴판 완비</span>
       </div>
       <div class="food-desc">삿포로 스프 카레 백명점 중 하나로 꼬치에 꽂아 튀겨낸 야채가 들어가는 원조격 스타일입니다. 카레 맵기와 밥 양을 커스텀해 취향껏 즐길 수 있어 대중적이면서 현지 향이 살아있습니다.</div>
@@ -1431,21 +1663,10 @@
       <div class="food-name">가라쿠 (GARAKU)</div>
       <div class="food-meta">
         <span class="food-tag">스스키노 도보 3분</span>
-        <span class="food-tag">1,300~1,900엔</span>
+        <span class="food-tag">1,300~1,900엔 (약 12,350원 ~ 18,050원)</span>
         <span class="food-tag">한국어 메뉴판 완비</span>
       </div>
       <div class="food-desc">진하고 감칠맛 넘치는 특제 스프로 한국인 관광객 선호도 1위인 곳입니다. 부드러운 닭다리살과 불맛 가득 튀겨낸 브로콜리 토핑이 대단히 인상적입니다. 오픈 전 테이블링 대기 추천.</div>
-    </div>
-
-    <div class="food-card">
-      <div class="food-category">🍜 미소 라멘 (타베로그 백명점 / 미슐랭)</div>
-      <div class="food-name">스미레 (すみれ) 스스키노점</div>
-      <div class="food-meta">
-        <span class="food-tag">스스키노역 도보 1분</span>
-        <span class="food-tag">1,000~1,500엔</span>
-        <span class="food-tag">영어 메뉴 지원</span>
-      </div>
-      <div class="food-desc">삿포로 정통 미소 라멘의 명가이자 역사 그 자체인 백명점 맛집. 고온의 돼지기름 막이 덮여 있어 먹는 내내 뜨거움이 유지되며, 생강과 진한 된장의 육수 궁합이 해장에 탁월합니다.</div>
     </div>
 
     <div class="food-card">
@@ -1453,10 +1674,122 @@
       <div class="food-name">파르페테리아 팔 (PaL)</div>
       <div class="food-meta">
         <span class="food-tag">스스키노 도보 3분</span>
-        <span class="food-tag">1,500~2,500엔</span>
+        <span class="food-tag">1,500~2,500엔 (약 14,250원 ~ 23,750원)</span>
         <span class="food-tag">한국어/영어 메뉴 지원</span>
       </div>
       <div class="food-desc">삿포로 특유의 밤문화인 '시메 파르페(식후 파르페)' 유행을 이끈 선구적인 디저트 카페. 예술적인 플레이팅과 신선한 홋카이도산 생크림 및 젤라토의 깊은 달콤함을 경험해 보세요.</div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- SHOPPING -->
+<section id="shopping">
+  <div class="section-label reveal">쇼핑 가이드</div>
+  <h2 class="section-title reveal">쇼핑몰 & 마트 한눈에 보기</h2>
+  <p class="section-desc reveal">호텔(삿포로 그랜드) 기준 동선으로 정리한 쇼핑 스팟. 백화점·몰은 입장료 없이 예산만! 면세는 <strong>한 매장 5,500엔(약 52,000원) 이상 + 여권</strong> 기준.</p>
+
+  <div class="food-grid reveal">
+
+    <div class="food-card">
+      <div class="food-category">🏬 대형몰 · 삿포로역</div>
+      <div class="food-name">JR타워 스텔라플레이스</div>
+      <div class="food-meta">
+        <span class="food-tag">삿포로역 직결</span>
+        <span class="food-tag">쇼핑 10:00~21:00</span>
+        <span class="food-tag">치카호 직결</span>
+      </div>
+      <div class="food-desc">삿포로 최대 규모 몰(센터·이스트). 패션·잡화·서점·코스메가 한곳에. 짐 부담 없게 <strong>Day1엔 찜만, 본구매는 Day4 막판</strong>에. 전망대 T38은 별도.</div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-category">🍰 백화점 · 삿포로역</div>
+      <div class="food-name">다이마루 삿포로 (지하 식품관)</div>
+      <div class="food-meta">
+        <span class="food-tag">삿포로역 직결</span>
+        <span class="food-tag">약 10:00~20:00</span>
+        <span class="food-tag">선물 본구매</span>
+      </div>
+      <div class="food-desc">데파치카(지하 식품관)가 핵심. 롯카테이·기타카로·마루세이 버터샌드 등 <strong>홋카이도 디저트 선물은 마지막 날 여기서</strong> 한 번에. 럭셔리 브랜드도 다수.</div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-category">👗 대형몰 · 오도리</div>
+      <div class="food-name">삿포로 파르코 (PARCO)</div>
+      <div class="food-meta">
+        <span class="food-tag">오도리역 직결</span>
+        <span class="food-tag">10:00~20:00</span>
+        <span class="food-tag">면세 카운터</span>
+      </div>
+      <div class="food-desc">2030 여성 패션·코스메가 가장 강한 몰. 꼼데가르송·빔즈·오니츠카 타이거 등. 맥주축제장(오도리공원)과 도보 3분이라 <strong>Day3 쇼핑 메인</strong>으로 최적.</div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-category">🛒 마트/잡화 · 타누키코지 (24h)</div>
+      <div class="food-name">MEGA 돈키호테 타누키코지 본점</div>
+      <div class="food-meta">
+        <span class="food-tag">스스키노역 도보 4분</span>
+        <span class="food-tag">24시간</span>
+        <span class="food-tag">면세 가능</span>
+      </div>
+      <div class="food-desc">6층 규모, 식품·생필품·약·화장품·가전·브랜드까지. <strong>24시간이라 야간 자유 쇼핑 최적</strong> — Day2 투어 후 밤에 면세 본구매를 몰아서 처리하기 좋아요.</div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-category">💄 드럭스토어 · 타누키코지</div>
+      <div class="food-name">사츠도라 · 마츠키요 · 선드럭</div>
+      <div class="food-meta">
+        <span class="food-tag">타누키코지 아케이드</span>
+        <span class="food-tag">사츠도라 5초메 ~24시</span>
+        <span class="food-tag">면세</span>
+      </div>
+      <div class="food-desc">화장품·약·간식 면세 쇼핑. 타누키코지를 한 방향으로 관통하며 드럭스토어 → 돈키호테 순으로 훑으면 되돌아감 없는 동선. 코스메 픽업은 여기서!</div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-category">🛍 신축 복합몰 · 스스키노</div>
+      <div class="food-name">코코노 스스키노 (COCONO)</div>
+      <div class="food-meta">
+        <span class="food-tag">스스키노역 직결</span>
+        <span class="food-tag">매장 10:00~21:00</span>
+        <span class="food-tag">B1·B2 식품마켓</span>
+      </div>
+      <div class="food-desc">2023년 개장 신축. 라이프스타일 잡화·뷰티 + <strong>B2 슈퍼마켓·B1 식품마켓</strong>이 마트 취향 저격. 스스키노 저녁·야경 동선에서 잠깐 들르기 좋음(21시 마감 주의).</div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-category">🏬 백화점 · 오도리</div>
+      <div class="food-name">미츠코시 · 마루이이마이</div>
+      <div class="food-meta">
+        <span class="food-tag">오도리역</span>
+        <span class="food-tag">약 10:00~20:00</span>
+        <span class="food-tag">데파치카</span>
+      </div>
+      <div class="food-desc">오도리의 전통 백화점 2곳. 럭셔리·여성복 + 지하 식품관(초콜릿·베이커리·반찬)이 강점. 파르코와 묶어 도보로 둘러보기 좋아요.</div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-category">🛒 대형 종합몰 · 외곽(선택)</div>
+      <div class="food-name">AEON몰 (이온몰)</div>
+      <div class="food-meta">
+        <span class="food-tag">토자이선 연선</span>
+        <span class="food-tag">약 09:00~21:00</span>
+        <span class="food-tag">슈퍼+푸드코트</span>
+      </div>
+      <div class="food-desc">대형 종합몰 + 슈퍼 + 푸드코트 + 면세 데스크. 외곽이라 <strong>시간 여유 있을 때만(선택)</strong> — 시내 중심 쇼핑(파르코·돈키호테·다이마루)으로 대부분 해결되니 굳이 무리해서 갈 필요는 없어요.</div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-category">📷 가전·잡화 · 삿포로역</div>
+      <div class="food-name">비쿠카메라 · 요도바시카메라</div>
+      <div class="food-meta">
+        <span class="food-tag">삿포로역 도보 1~5분</span>
+        <span class="food-tag">요도바시 ~22:00</span>
+        <span class="food-tag">면세</span>
+      </div>
+      <div class="food-desc">가전·코스메·잡화·식품까지. 요도바시는 밤 22시까지라 늦은 시간 활용 가능. 면세 데스크 있음. 토큐핸즈(생활잡화·문구)도 삿포로역 도큐백화점 입점.</div>
     </div>
 
   </div>
@@ -1483,13 +1816,13 @@
     </div>
     <div class="tip-card">
       <div class="tip-icon">🍺</div>
-      <div class="tip-title">맥주박물관 시음</div>
-      <div class="tip-text">2026년 7월부터 입장 유료. 시음 시 여권 지참 필수. 가이드 투어(1,000엔)는 사전 예약 권장.</div>
+      <div class="tip-title">오도리 맥주 축제 팁</div>
+      <div class="tip-text">오후 3~4시 골든 타임 방문 권장 (천막 아래 명당 선점). 관광객 사전 예약 좌석인 '오모테나시 시트'도 온라인 사전 예약 가능. 성인 인증용 신분증(여권) 필수 지참!</div>
     </div>
     <div class="tip-card">
       <div class="tip-icon">💴</div>
       <div class="tip-title">현금 준비</div>
-      <div class="tip-text">일부 라멘·이자카야는 현금 전용. 1인당 1일 약 1~2만 엔 현금 준비 권장. 환전은 한국에서!</div>
+      <div class="tip-text">일부 노포·이자카야는 현금 전용. 1인당 1일 약 1~2만 엔 현금 준비 권장. 환전은 한국에서!</div>
     </div>
     <div class="tip-card">
       <div class="tip-icon">🛍</div>
@@ -1503,8 +1836,8 @@
     </div>
     <div class="tip-card">
       <div class="tip-icon">🐑</div>
-      <div class="tip-title">다루마 징기스칸</div>
-      <div class="tip-text">예약 불가 매장. 오픈 30분 전(17:30)에 줄 서거나, 저녁 9시 이후 방문하면 대기가 짧아짐.</div>
+      <div class="tip-title">다이코쿠야 징기스칸 예약</div>
+      <div class="tip-text">Day 1 저녁 18:00 방문. 인기점이라 워크인 대기가 길어요. 전화(011-211-1429)나 넷 예약(토레타)으로 미리 잡아두세요. 좌석은 90분제이며 8/3(월)은 17:00 오픈입니다.</div>
     </div>
     <div class="tip-card">
       <div class="tip-icon">🚃</div>
@@ -1540,6 +1873,11 @@
     document.querySelectorAll('.day-panel').forEach((p, i) => {
       p.classList.toggle('active', i === idx);
     });
+    // 숨겨졌던 지도는 크기가 0으로 잡히므로, 탭을 펼칠 때 다시 계산
+    if (window.dayMaps && window.dayMaps[idx]) {
+      const m = window.dayMaps[idx];
+      setTimeout(() => { m.map.invalidateSize(); m.map.fitBounds(m.bounds, { padding: [30, 30] }); }, 60);
+    }
   }
 
   // Scroll reveal
@@ -1656,6 +1994,135 @@
     }
 
     animate();
+  })();
+
+  // ── Day별 동선 지도 (Leaflet + CartoDB 다크 타일) ──
+  (function() {
+    if (typeof L === 'undefined') return;
+
+    // 각 Day 방문지: [순번, 이름, [위도, 경도], 입장료(선택)]
+    // mode: 구글지도 길찾기 이동수단 / osrm: 도로 동선 프로파일
+    const DAYS = [
+      { el: 'map-day0', mode: 'transit', osrm: 'driving', points: [
+        { n: 1, name: '신치토세 공항', ll: [42.7857, 141.6810], fee: '도착 13:45' },
+        { n: 2, name: '삿포로역 (스텔라 플레이스 쇼핑)', ll: [43.0686, 141.3508] },
+        { n: 3, name: '삿포로 그랜드 호텔 (체크인)', ll: [43.0631, 141.3525] },
+        { n: 4, name: 'MEGA 돈키호테 타누키코지 별관 (모유쿠 삿포로)', ll: [43.0576, 141.3532], fee: '10:00~익일 02:00 · 면세' },
+        { n: 5, name: '스스키노 — 다이코쿠야 징기스칸 (18:00)', ll: [43.0546, 141.3560], fee: '예약 권장 · 90분제' },
+        { n: 6, name: '시계탑 · TV 타워 (야경)', ll: [43.0609, 141.3563], fee: 'TV타워 1,000엔 (약 9,500원)' },
+        { n: 7, name: '스스키노 복귀 (시메 파르페)', ll: [43.0548, 141.3536] }
+      ]},
+      { el: 'map-day1', mode: 'driving', osrm: 'driving', points: [
+        { n: 1, name: '삿포로역 북쪽출구 (07:50 집합)', ll: [43.0686, 141.3508] },
+        { n: 2, name: '사계채의 언덕 (비에이)', ll: [43.6062, 142.5103], fee: '500엔 (약 4,750원)' },
+        { n: 3, name: '패치워크 로드 (켄메리·세븐스타 나무)', ll: [43.6105, 142.4330] },
+        { n: 4, name: '비에이역 점심 — 준페이', ll: [43.5912, 142.4665], fee: '좌석 자동확약' },
+        { n: 5, name: '청의 호수 (아오이이케)', ll: [43.4923, 142.6469], fee: '무료' },
+        { n: 6, name: '흰 수염 폭포 (시라히게)', ll: [43.4762, 142.6303], fee: '무료' },
+        { n: 7, name: '팜 토미타 (후라노)', ll: [43.4189, 142.4098], fee: '무료' },
+        { n: 8, name: '스스키노 하차 → 저녁 스프카레 킹 (19:15)', ll: [43.0575, 141.3535], fee: '평일 ~21:30' }
+      ]},
+      { el: 'map-day2', mode: 'transit', osrm: 'driving', points: [
+        { n: 1, name: '삿포로 그랜드 호텔', ll: [43.0631, 141.3525] },
+        { n: 2, name: '오도리 (파르코·점심·맥주축제)', ll: [43.0590, 141.3535], fee: '파르코 면세 / 맥주축제 무료' },
+        { n: 3, name: '타누키코지 상점가', ll: [43.0566, 141.3540] },
+        { n: 4, name: '스스키노 (야키니쿠 츠바메)', ll: [43.0545, 141.3528] },
+        { n: 5, name: '모이와산 로프웨이 (야경)', ll: [43.0388, 141.3265], fee: '왕복 2,100엔 (약 20,000원)' },
+        { n: 6, name: '스스키노 복귀 (시메 파르페)', ll: [43.0552, 141.3540] }
+      ]},
+      { el: 'map-day3', mode: 'transit', osrm: 'driving', points: [
+        { n: 1, name: '삿포로 그랜드 호텔 (체크아웃)', ll: [43.0631, 141.3525] },
+        { n: 2, name: '삿포로역 (막판 쇼핑)', ll: [43.0686, 141.3508] },
+        { n: 3, name: '신치토세 공항 (귀국)', ll: [42.7857, 141.6810], fee: '15:05 출발' }
+      ]}
+    ];
+
+    window.dayMaps = {};
+
+    // 방문지 순서대로 구글지도 길찾기 URL 생성 (API 키 불필요)
+    function googleDirUrl(day) {
+      const p = day.points;
+      const fmt = pt => pt.ll[0] + ',' + pt.ll[1];
+      let url = 'https://www.google.com/maps/dir/?api=1'
+        + '&origin=' + fmt(p[0])
+        + '&destination=' + fmt(p[p.length - 1])
+        + '&travelmode=' + (day.mode || 'transit');
+      if (p.length > 2) {
+        url += '&waypoints=' + p.slice(1, -1).map(fmt).join('|');
+      }
+      return url;
+    }
+
+    // OSRM 공개 서버로 실제 도로를 따라가는 경로 좌표를 받아 그린다
+    function drawRoadRoute(map, day, straightLine) {
+      const coords = day.points.map(p => p.ll[1] + ',' + p.ll[0]).join(';');
+      const url = 'https://router.project-osrm.org/route/v1/' + (day.osrm || 'driving')
+        + '/' + coords + '?overview=full&geometries=geojson';
+      fetch(url)
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(data => {
+          if (!data.routes || !data.routes.length) return;
+          const line = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+          L.polyline(line, { color: '#E0B0FF', weight: 4, opacity: 0.9 }).addTo(map);
+          if (straightLine) map.removeLayer(straightLine); // 도로 경로를 받으면 직선 제거
+        })
+        .catch(() => { /* 실패 시 직선 점선 유지 */ });
+    }
+
+    DAYS.forEach((day, idx) => {
+      const elNode = document.getElementById(day.el);
+      if (!elNode) return;
+
+      const map = L.map(elNode, { scrollWheelZoom: false, attributionControl: true });
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        subdomains: 'abcd', maxZoom: 19
+      }).addTo(map);
+
+      const latlngs = day.points.map(p => p.ll);
+
+      // 1) 즉시 보이는 직선 점선(폴백) → 2) 실제 도로 경로 받아오면 교체
+      const straightLine = L.polyline(latlngs, {
+        color: '#E0B0FF', weight: 2.5, opacity: 0.5, dashArray: '6, 9'
+      }).addTo(map);
+      drawRoadRoute(map, day, straightLine);
+
+      // 번호 마커 + 팝업
+      day.points.forEach(p => {
+        const icon = L.divIcon({
+          className: '', html: '<div class="map-marker-num">' + p.n + '</div>',
+          iconSize: [26, 26], iconAnchor: [13, 13]
+        });
+        const feeHtml = p.fee ? '<br><span class="pop-fee">' + p.fee + '</span>' : '';
+        L.marker(p.ll, { icon }).addTo(map)
+          .bindPopup('<b>' + p.n + '. ' + p.name + '</b>' + feeHtml);
+      });
+
+      const bounds = L.latLngBounds(latlngs);
+      map.fitBounds(bounds, { padding: [30, 30] });
+
+      // 구글지도 길찾기 버튼을 지도 헤더에 추가
+      const head = elNode.parentNode.querySelector('.day-map-head');
+      if (head) {
+        const a = document.createElement('a');
+        a.className = 'map-gmap-btn';
+        a.href = googleDirUrl(day);
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.innerHTML = '🧭 구글지도로 길찾기';
+        head.appendChild(a);
+      }
+
+      window.dayMaps[idx] = { map, bounds };
+    });
+
+    // 첫 화면(Day 1) 지도는 보이는 상태이므로 즉시 크기 보정
+    setTimeout(() => {
+      if (window.dayMaps[0]) {
+        window.dayMaps[0].map.invalidateSize();
+        window.dayMaps[0].map.fitBounds(window.dayMaps[0].bounds, { padding: [30, 30] });
+      }
+    }, 200);
   })();
 </script>
 </body>
